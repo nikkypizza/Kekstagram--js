@@ -61,4 +61,38 @@ var renderPhotoCards = function (arr) {
   picturesListNode.appendChild(fragment);
 };
 
+var showBigPictureWithData = function () {
+  var bigPictureNode = document.querySelector('.big-picture');
+  bigPictureNode.classList.remove('hidden');
+  bigPictureNode.querySelector('.big-picture__img img').src = allPhotosArr[0].url;
+  bigPictureNode.querySelector('.likes-count').textContent = allPhotosArr[0].likes;
+  bigPictureNode.querySelector('.social__caption').textContent = allPhotosArr[0].description;
+  bigPictureNode.querySelector('.comments-count').textContent = allPhotosArr[0].comments.length; // ??
+
+  var commentElement = document.querySelector('.social__comment').cloneNode();
+  var commentPictureElement = document.querySelector('.social__picture').cloneNode(true);
+
+  // Удаляет из разметки уже существующие комментарии (предположил, что так нужно, но я не уверен)
+  var socialCommentsList = document.querySelector('.social__comments');
+  while (socialCommentsList.firstChild) {
+    socialCommentsList.removeChild(socialCommentsList.firstChild);
+  }
+
+  // Добавляет в разметку новый комментарий с данными из первого объекта массива данных
+  var fragment = document.createDocumentFragment();
+  var text = document.createTextNode(allPhotosArr[0].comments); // Создал новую текст ноду, ибо если использовать textContent, то это затирает все содержимое
+  commentPictureElement.src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
+
+  commentElement.appendChild(commentPictureElement);
+  commentElement.appendChild(text);
+
+  fragment.appendChild(commentElement);
+  socialCommentsList.appendChild(fragment);
+
+  // Скрывает ноды с комментами и спиннером
+  document.querySelector('.social__comment-count').classList.add('visually-hidden');
+  document.querySelector('.social__comment-loadmore').classList.add('visually-hidden');
+};
+
 renderPhotoCards(allPhotosArr);
+showBigPictureWithData();
