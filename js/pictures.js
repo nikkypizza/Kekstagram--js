@@ -93,4 +93,44 @@ var showBigPictureWithData = function (arrElem) {
 };
 
 renderPhotoCards(allPhotosArr);
-showBigPictureWithData(allPhotosArr[0]);
+// showBigPictureWithData(allPhotosArr[0]);
+
+// —-------module4-task1
+
+var keyCodeMap = {
+  KEY_ESC: 27,
+  KEY_ENTER: 13
+};
+
+var uploadFileInputNode = document.querySelector('#upload-file');
+var uploadOverlayNode = document.querySelector('.img-upload__overlay');
+var uploadOverlayCloseNode = document.querySelector('#upload-cancel');
+var textHashtagsInputNode = document.querySelector('.text__hashtags');
+var textDescriptionInputNode = document.querySelector('.text__description');
+
+var onOverlayEscPress = function (evt) {
+  if (evt.keyCode === keyCodeMap.KEY_ESC && document.activeElement !== textHashtagsInputNode && document.activeElement !== textDescriptionInputNode) {
+  // В ТЗ не нашел этого , но добавил Незакрытие по ESC при фокусе в полях формы (по аналогии с учебным проектом)
+    onOverlayClose();
+  }
+};
+var onOverlayOpen = function () {
+  uploadOverlayNode.classList.remove('hidden');
+  document.addEventListener('keydown', onOverlayEscPress);
+};
+var onOverlayClose = function () {
+  uploadOverlayNode.classList.add('hidden');
+  uploadFileInputNode.value = '';
+  // Не понимаю куда записывается название файла из <input type="file">, потому не могу понять что именно нужно обнулить при закрытии модалки
+  document.removeEventListener('keydown', onOverlayEscPress);
+};
+
+uploadFileInputNode.addEventListener('change', onOverlayOpen);
+
+uploadOverlayCloseNode.addEventListener('click', onOverlayClose);
+uploadOverlayCloseNode.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === keyCodeMap.KEY_ENTER) {
+    onOverlayClose();
+  }
+});
+
