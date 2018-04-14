@@ -116,12 +116,18 @@ var onOverlayEscPress = function (evt) {
 };
 var onOverlayOpen = function () {
   uploadOverlayNode.classList.remove('hidden');
+  effectScaleNode.classList.add('hidden');
   document.addEventListener('keydown', onOverlayEscPress);
 };
+// При закрытии модалки возвращает все поля формы и значения фильтра в исходное положение
 var onOverlayClose = function () {
   uploadOverlayNode.classList.add('hidden');
   uploadFileInputNode.value = '';
   // Не понимаю куда записывается название файла из <input type="file">, потому не могу понять что именно нужно обнулить при закрытии модалки
+  uploadPreviewNode.removeAttribute('style');
+  uploadPreviewNode.removeAttribute('class');
+  scaleValueInputNode.removeAttribute('value');
+  filterNoneNode.selected = true;
   document.removeEventListener('keydown', onOverlayEscPress);
 };
 
@@ -134,17 +140,25 @@ uploadOverlayCloseNode.addEventListener('keydown', function (evt) {
   }
 });
 
-// Эффекты слайдера
-var filtersListNode = document.querySelector('.effects__list');
-var uploadPreviewNode = document.querySelector('.img-upload__preview img');
-var effectScaleNode = document.querySelector('.img-upload__scale');
 
+var filtersListNode = document.querySelector('.effects__list');
+var uploadPreviewNode = document.querySelector('.img-upload__preview');
+// Список переменных шкалы фильтра
+var effectScaleNode = document.querySelector('.img-upload__scale');
+var scaleLineNode = effectScaleNode.querySelector('.scale__line');
+var scalePinNode = scaleLineNode.querySelector('.scale__pin');
+var scaleLevelNode = scaleLineNode.querySelector('.scale__level');
+var scaleValueInputNode = document.querySelector('.scale__value');
+
+document.querySelector('.img-upload__resize').style = 'z-index: 100'; // При смене фильтров пропадали кнопки масштаба, не смог понять почему так => добавил z-index
+
+// Список элементов-фильтров по ID
 var filterChromeNode = filtersListNode.querySelector('#effect-chrome');
 var filterSepiaNode = filtersListNode.querySelector('#effect-sepia');
 var filterMarvinNode = filtersListNode.querySelector('#effect-marvin');
 var filterPhobosNode = filtersListNode.querySelector('#effect-phobos');
 var filterHeatNode = filtersListNode.querySelector('#effect-heat');
-
+var filterNoneNode = filtersListNode.querySelector('#effect-none');
 
 var filtersClassNameMap = {
   chrome: 'effects__preview--chrome',
@@ -154,16 +168,55 @@ var filtersClassNameMap = {
   heat: 'effects__preview--heat'
 };
 
+// Получает соотношение шкалы уровня к общей длине шкалы и подставляет это значение в подходящем формате в атрибут style
+var refreshFilterDepth = function () {
+  var getEffectDepth = function () {
+    return (scaleLevelNode.offsetWidth / scaleLineNode.offsetWidth).toFixed(2);
+  };
+  var depth = getEffectDepth();
+  /*
+ В ТЗ п2.2 написано "При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%): слайдер, CSS-стиль изображения и значение поля должны обновляться."
+
+  В задании - "Обратите внимание, что при переключении фильтра, уровень эффекта должен сразу выставляться соответствующим положению слайдера, т.е. логика по определению уровня насыщенности должна срабатывать не только при «перемещении» слайдера, но и при переключении фильтров."
+
+  Сделал, как в задании: при переключении фильтров значение синхронизуется с положением слайдера
+  */
+  if (filterChromeNode.checked) {
+    uploadPreviewNode.style = 'filter: grayscale(' + depth + ');';
+    scaleValueInputNode.setAttribute('value', depth);
+  }
+  if (filterSepiaNode.checked) {
+    uploadPreviewNode.style = 'filter: sepia(' + depth + ');';
+    scaleValueInputNode.setAttribute('value', depth);
+  }
+  if (filterMarvinNode.checked) {
+    uploadPreviewNode.style = 'filter: invert(' + depth * 100 + '%);';
+    scaleValueInputNode.setAttribute('value', depth * 100 + '%');
+  }
+  if (filterPhobosNode.checked) {
+    uploadPreviewNode.style = 'filter: blur(' + depth * 3 + 'px);';
+    scaleValueInputNode.setAttribute('value', (depth * 3).toFixed(2) + 'px');
+  }
+  if (filterHeatNode.checked) {
+    uploadPreviewNode.style = 'filter: brightness(' + depth * 3 + ');';
+    scaleValueInputNode.setAttribute('value', (depth * 3).toFixed(2));
+  }
+};
+
 var onFilterChange = function (scaleIsHidden, filterClassNameAdd) {
   uploadPreviewNode.removeAttribute('class');
+  // Если шкала спрятана (===выбран вариант без фильтра) - обнуляет фильтры превью и значение фильтра в форме
   if (scaleIsHidden) {
     effectScaleNode.classList.add('hidden');
+    uploadPreviewNode.removeAttribute('style');
+    scaleValueInputNode.removeAttribute('value');
   } else {
     effectScaleNode.classList.remove('hidden');
   }
   if (filterClassNameAdd) {
     uploadPreviewNode.className = filterClassNameAdd;
   }
+  refreshFilterDepth();
 };
 
 filtersListNode.addEventListener('click', function (evt) {
@@ -188,3 +241,5 @@ filtersListNode.addEventListener('click', function (evt) {
       break;
   }
 });
+
+scalePinNode.addEventListener('mouseup', refreshFilterDepth);
