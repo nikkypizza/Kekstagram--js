@@ -110,7 +110,7 @@ var textDescriptionInputNode = document.querySelector('.text__description');
 
 var onOverlayEscPress = function (evt) {
   if (evt.keyCode === keyCodeMap.KEY_ESC && document.activeElement !== textHashtagsInputNode && document.activeElement !== textDescriptionInputNode) {
-  // В ТЗ не нашел этого , но добавил Незакрытие по ESC при фокусе в полях формы (по аналогии с учебным проектом)
+    // В ТЗ не нашел этого , но добавил Незакрытие по ESC при фокусе в полях формы (по аналогии с учебным проектом)
     onOverlayClose();
   }
 };
@@ -134,3 +134,57 @@ uploadOverlayCloseNode.addEventListener('keydown', function (evt) {
   }
 });
 
+// Эффекты слайдера
+var filtersListNode = document.querySelector('.effects__list');
+var uploadPreviewNode = document.querySelector('.img-upload__preview img');
+var effectScaleNode = document.querySelector('.img-upload__scale');
+
+var filterChromeNode = filtersListNode.querySelector('#effect-chrome');
+var filterSepiaNode = filtersListNode.querySelector('#effect-sepia');
+var filterMarvinNode = filtersListNode.querySelector('#effect-marvin');
+var filterPhobosNode = filtersListNode.querySelector('#effect-phobos');
+var filterHeatNode = filtersListNode.querySelector('#effect-heat');
+
+
+var filtersClassNameMap = {
+  chrome: 'effects__preview--chrome',
+  sepia: 'effects__preview--sepia',
+  marvin: 'effects__preview--marvin',
+  phobos: 'effects__preview--phobos',
+  heat: 'effects__preview--heat'
+};
+
+var onFilterChange = function (scaleIsHidden, filterClassNameAdd) {
+  uploadPreviewNode.removeAttribute('class');
+  if (scaleIsHidden) {
+    effectScaleNode.classList.add('hidden');
+  } else {
+    effectScaleNode.classList.remove('hidden');
+  }
+  if (filterClassNameAdd) {
+    uploadPreviewNode.className = filterClassNameAdd;
+  }
+};
+
+filtersListNode.addEventListener('click', function (evt) {
+  switch (evt.target) {
+    case filterChromeNode :
+      onFilterChange(false, filtersClassNameMap.chrome);
+      break;
+    case filterSepiaNode :
+      onFilterChange(false, filtersClassNameMap.sepia);
+      break;
+    case filterMarvinNode :
+      onFilterChange(false, filtersClassNameMap.marvin);
+      break;
+    case filterPhobosNode :
+      onFilterChange(false, filtersClassNameMap.phobos);
+      break;
+    case filterHeatNode :
+      onFilterChange(false, filtersClassNameMap.heat);
+      break;
+    default:
+      onFilterChange(true);
+      break;
+  }
+});
