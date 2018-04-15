@@ -122,11 +122,14 @@ var onOverlayOpen = function () {
 // При закрытии модалки возвращает все поля формы и значения фильтра в исходное положение
 var onOverlayClose = function () {
   uploadOverlayNode.classList.add('hidden');
-  uploadFileInputNode.value = '';
-  // Не понимаю куда записывается название файла из <input type="file">, потому не могу понять что именно нужно обнулить при закрытии модалки
+  uploadFileInputNode.value = ''; // Не понимаю куда записывается название файла из <input type="file">, потому не могу понять что именно нужно обнулить при закрытии модалки
+
+  // Обнуляет все изменения при закрытии модального окна
   uploadPreviewNode.removeAttribute('style');
   uploadPreviewNode.removeAttribute('class');
   scaleValueInputNode.removeAttribute('value');
+  uploadPreviewNode.querySelector('img').removeAttribute('style');
+  resizeValueInput.value = 100 + '%';
   filterNoneNode.selected = true;
   document.removeEventListener('keydown', onOverlayEscPress);
 };
@@ -149,6 +152,11 @@ var scaleLineNode = effectScaleNode.querySelector('.scale__line');
 var scalePinNode = scaleLineNode.querySelector('.scale__pin');
 var scaleLevelNode = scaleLineNode.querySelector('.scale__level');
 var scaleValueInputNode = document.querySelector('.scale__value');
+// Список переменных ноды изменения размеров
+var uploadResizeNode = document.querySelector('.img-upload__resize');
+var resizeMinusNode = uploadResizeNode.querySelector('.resize__control--minus');
+var resizePlusNode = uploadResizeNode.querySelector('.resize__control--plus');
+var resizeValueInput = uploadResizeNode.querySelector('.resize__control--value');
 
 document.querySelector('.img-upload__resize').style = 'z-index: 100'; // При смене фильтров пропадали кнопки масштаба, не смог понять почему так => добавил z-index
 
@@ -175,7 +183,7 @@ var refreshFilterDepth = function () {
   };
   var depth = getEffectDepth();
   /*
- В ТЗ п2.2 написано "При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%): слайдер, CSS-стиль изображения и значение поля должны обновляться."
+  В ТЗ п2.2 написано "При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%): слайдер, CSS-стиль изображения и значение поля должны обновляться."
 
   В задании - "Обратите внимание, что при переключении фильтра, уровень эффекта должен сразу выставляться соответствующим положению слайдера, т.е. логика по определению уровня насыщенности должна срабатывать не только при «перемещении» слайдера, но и при переключении фильтров."
 
@@ -242,4 +250,41 @@ filtersListNode.addEventListener('click', function (evt) {
   }
 });
 
+// Вешает обработчик отпускания клика на пин фильтра
 scalePinNode.addEventListener('mouseup', refreshFilterDepth);
+
+
+var onImgResize = function (scaleDown, scaleUp) {
+  var img = uploadPreviewNode.querySelector('img');
+  var inputValue = parseInt(resizeValueInput.value, 10);
+  var maxValue = 100;
+  var minValue = 25;
+  var step = 25;
+  if (scaleDown) {
+    if (inputValue > minValue) {
+      img.style.transform = 'scale(0.' + (inputValue - step) + ')';
+      resizeValueInput.value = inputValue - step + '%';
+    }
+  }
+  if (scaleUp) {
+    if (inputValue < maxValue) {
+      img.style.transform = 'scale(0.' + (inputValue + step) + ')';
+      resizeValueInput.value = inputValue + step + '%';
+      if (parseInt(resizeValueInput.value, 10) === maxValue) {
+        img.removeAttribute('style');
+        resizeValueInput.value = maxValue + '%';
+      }
+    }
+  }
+};
+
+uploadResizeNode.addEventListener('click', function (evt) {
+  switch (evt.target) {
+    case resizeMinusNode :
+      onImgResize(true);
+      break;
+    case resizePlusNode:
+      onImgResize(false, true);
+      break;
+  }
+});
