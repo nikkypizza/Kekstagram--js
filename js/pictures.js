@@ -45,10 +45,10 @@ var generatePhotoCardsDataArray = function (dataObj) {
 
 var allPhotosArr = generatePhotoCardsDataArray(photoDataMap);
 
+var picturesListNode = document.querySelector('.pictures');
 // Подставляет данные из массива объектов в фрагменты и встраивает их на страницу
 var renderPhotoCards = function (arr) {
   var photoTemplateNode = document.querySelector('#picture').content.querySelector('.picture__link');
-  var picturesListNode = document.querySelector('.pictures');
 
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < arr.length; i++) {
@@ -61,8 +61,9 @@ var renderPhotoCards = function (arr) {
   picturesListNode.appendChild(fragment);
 };
 
+var bigPictureNode = document.querySelector('.big-picture');
+
 var showBigPictureWithData = function (arrElem) {
-  var bigPictureNode = document.querySelector('.big-picture');
   bigPictureNode.classList.remove('hidden');
 
   bigPictureNode.querySelector('.big-picture__img img').src = arrElem.url;
@@ -93,7 +94,6 @@ var showBigPictureWithData = function (arrElem) {
 };
 
 renderPhotoCards(allPhotosArr);
-// showBigPictureWithData(allPhotosArr[0]);
 
 // —-------module4-task1
 
@@ -112,6 +112,7 @@ var onOverlayEscPress = function (evt) {
   if (evt.keyCode === keyCodeMap.KEY_ESC && document.activeElement !== textHashtagsInputNode && document.activeElement !== textDescriptionInputNode) {
     // В ТЗ не нашел этого , но добавил Незакрытие по ESC при фокусе в полях формы (по аналогии с учебным проектом)
     onOverlayClose();
+    bigPictureNode.classList.add('hidden');
   }
 };
 var onOverlayOpen = function () {
@@ -157,6 +158,8 @@ var uploadResizeNode = document.querySelector('.img-upload__resize');
 var resizeMinusNode = uploadResizeNode.querySelector('.resize__control--minus');
 var resizePlusNode = uploadResizeNode.querySelector('.resize__control--plus');
 var resizeValueInput = uploadResizeNode.querySelector('.resize__control--value');
+
+var bigPictureCloseNode = document.querySelector('.big-picture__cancel');
 
 document.querySelector('.img-upload__resize').style = 'z-index: 100'; // При смене фильтров пропадали кнопки масштаба, не смог понять почему так => добавил z-index
 
@@ -253,7 +256,7 @@ filtersListNode.addEventListener('click', function (evt) {
 // Вешает обработчик отпускания клика на пин фильтра
 scalePinNode.addEventListener('mouseup', refreshFilterDepth);
 
-
+// Меняет размер изображения, записывает данные в инпут
 var onImgResize = function (scaleDown, scaleUp) {
   var img = uploadPreviewNode.querySelector('img');
   var inputValue = parseInt(resizeValueInput.value, 10);
@@ -288,3 +291,25 @@ uploadResizeNode.addEventListener('click', function (evt) {
       break;
   }
 });
+
+
+var onPictureMinClick = function (evt) {
+  if (evt.target.parentElement.className === 'picture__link') {
+    var target = evt.target;
+    for (var i = 0; i < allPhotosArr.length; i++) {
+      if (target.getAttribute('src') === allPhotosArr[i].url) {
+        event.preventDefault();
+        showBigPictureWithData(allPhotosArr[i]);
+        document.addEventListener('keydown', onOverlayEscPress);
+        bigPictureCloseNode.addEventListener('click', function () {
+          bigPictureNode.classList.add('hidden');
+        });
+      }
+    }
+  } else {
+    return;
+  }
+};
+
+// Открывает большую картинку по клику на миниатюру, вешает обработчик закрытия
+picturesListNode.addEventListener('click', onPictureMinClick);
