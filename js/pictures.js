@@ -110,7 +110,6 @@ var textDescriptionInputNode = document.querySelector('.text__description');
 
 var onOverlayEscPress = function (evt) {
   if (evt.keyCode === keyCodeMap.KEY_ESC && document.activeElement !== textHashtagsInputNode && document.activeElement !== textDescriptionInputNode) {
-    // В ТЗ не нашел этого , но добавил Незакрытие по ESC при фокусе в полях формы (по аналогии с учебным проектом)
     onOverlayClose();
     bigPictureNode.classList.add('hidden');
   }
@@ -123,9 +122,9 @@ var onOverlayOpen = function () {
 // При закрытии модалки возвращает все поля формы и значения фильтра в исходное положение
 var onOverlayClose = function () {
   uploadOverlayNode.classList.add('hidden');
-  uploadFileInputNode.value = ''; // Не понимаю куда записывается название файла из <input type="file">, потому не могу понять что именно нужно обнулить при закрытии модалки
 
   // Обнуляет все изменения при закрытии модального окна
+  uploadFileInputNode.value = '';
   uploadPreviewNode.removeAttribute('style');
   uploadPreviewNode.removeAttribute('class');
   scaleValueInputNode.removeAttribute('value');
@@ -185,13 +184,6 @@ var refreshFilterDepth = function () {
     return (scaleLevelNode.offsetWidth / scaleLineNode.offsetWidth).toFixed(2);
   };
   var depth = getEffectDepth();
-  /*
-  В ТЗ п2.2 написано "При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%): слайдер, CSS-стиль изображения и значение поля должны обновляться."
-
-  В задании - "Обратите внимание, что при переключении фильтра, уровень эффекта должен сразу выставляться соответствующим положению слайдера, т.е. логика по определению уровня насыщенности должна срабатывать не только при «перемещении» слайдера, но и при переключении фильтров."
-
-  Сделал, как в задании: при переключении фильтров значение синхронизуется с положением слайдера
-  */
   if (filterChromeNode.checked) {
     uploadPreviewNode.style = 'filter: grayscale(' + depth + ');';
     scaleValueInputNode.setAttribute('value', depth);
@@ -216,7 +208,7 @@ var refreshFilterDepth = function () {
 
 var onFilterChange = function (scaleIsHidden, filterClassNameAdd) {
   uploadPreviewNode.removeAttribute('class');
-  // Если шкала спрятана (===выбран вариант без фильтра) - обнуляет фильтры превью и значение фильтра в форме
+  // Если шкала спрятана ( === выбран вариант без фильтра) - обнуляет фильтры превью и значение фильтра в форме
   if (scaleIsHidden) {
     effectScaleNode.classList.add('hidden');
     uploadPreviewNode.removeAttribute('style');
@@ -298,16 +290,13 @@ var onPictureMinClick = function (evt) {
     var target = evt.target;
     for (var i = 0; i < allPhotosArr.length; i++) {
       if (target.getAttribute('src') === allPhotosArr[i].url) {
-        event.preventDefault();
         showBigPictureWithData(allPhotosArr[i]);
-        document.addEventListener('keydown', onOverlayEscPress);
-        bigPictureCloseNode.addEventListener('click', function () {
-          bigPictureNode.classList.add('hidden');
-        });
       }
     }
-  } else {
-    return;
+    document.addEventListener('keydown', onOverlayEscPress);
+    bigPictureCloseNode.addEventListener('click', function () {
+      bigPictureNode.classList.add('hidden');
+    });
   }
 };
 
