@@ -35,7 +35,7 @@
           <form class="img-upload__form" id="upload-select-image" method="post" enctype="multipart/form-data" autocomplete="off" action="https://js.dump.academy/kekstagram">
 
             <fieldset class="img-upload__start">
-              <input type="file" id="upload-file" class="img-upload__input visually-hidden" name="filename" required>
+              <input type="file" id="upload-file" class="img-upload__input visually-hidden" name="filename" accept="image/*" required>
               <label for="upload-file" class="img-upload__label img-upload__control">Загрузить</label>
             </fieldset>
 
@@ -122,8 +122,8 @@
                 </fieldset>
 
                 <fieldset class="img-upload__text text">
-                  <input class="text__hashtags" name="hashtags" placeholder="#хэш-тег">
-                  <textarea class="text__description" name="description" placeholder="Ваш комментарий..."></textarea>
+                  <input class="text__hashtags" name="hashtags" placeholder="#хэш-тег" maxlength="104">
+                  <textarea class="text__description" name="description" placeholder="Ваш комментарий..." maxlength="140"></textarea>
                 </fieldset>
 
                 <button type="submit" class="img-upload__submit" id="upload-submit">Опубликовать</button>
