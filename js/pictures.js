@@ -302,3 +302,48 @@ var onPictureMinClick = function (evt) {
 
 // Открывает большую картинку по клику на миниатюру, вешает обработчик закрытия
 picturesListNode.addEventListener('click', onPictureMinClick);
+
+// --- module4-task2
+
+var validateFormOnSubmit = function () {
+  var hashtagArray = textHashtagsInputNode.value.split(' ');
+  var duplicatesCounter = 0;
+  textHashtagsInputNode.setCustomValidity('');
+  for (var i = 0; i < hashtagArray.length; i++) {
+    // Если элементе массива '#' встречается больше 1 раза - кидаем CustomValidity
+    if (hashtagArray[i].split('#').length - 1 > 1) {
+      textHashtagsInputNode.setCustomValidity('Хеш-теги должны разделяться проебелами');
+    }
+    // Заканчивается на '#', точку или запятую ? - убрать
+    while (hashtagArray[i].slice(-1) === '#' || hashtagArray[i].slice(-1) === ',' || hashtagArray[i].slice(-1) === '.' || hashtagArray[i].slice(-1) === '/') {
+      hashtagArray[i] = hashtagArray[i].slice(0, -1);
+    }
+    // Не начинается с '#' ? - поставить '#'
+    if (hashtagArray[i].slice(0, 1) !== '#') {
+      hashtagArray[i] = '#' + hashtagArray[i];
+    }
+    if (hashtagArray[i].length > 20) {
+      textHashtagsInputNode.setCustomValidity('Длина хеш-тега не может превышать 20 символов');
+    }
+    // Переводим все элементы в верхний регистр и сравниваем исходный массив с самим собой. Если совпадений больше, чем длинна массива => в нем есть повторы === кидаем CustomValidity
+    for (var j = 0; j < hashtagArray.length; j++) {
+      if (hashtagArray[i].toUpperCase() === hashtagArray[j].toUpperCase()) {
+        duplicatesCounter++;
+      }
+      if (duplicatesCounter > hashtagArray.length) {
+        textHashtagsInputNode.setCustomValidity('Хеш-теги не должны повторяться');
+      }
+    }
+    // Выносим мусор и пустоты из массива
+    while (hashtagArray[i] === '' || hashtagArray[i] === '#' || hashtagArray[i] === ' ') {
+      hashtagArray.splice(i, 1);
+    }
+  }
+  if (hashtagArray.length > 5) {
+    textHashtagsInputNode.setCustomValidity('Хеш-тегов не может быть более 5');
+  }
+
+  textHashtagsInputNode.value = hashtagArray.join(' ');
+};
+
+textHashtagsInputNode.addEventListener('blur', validateFormOnSubmit);
