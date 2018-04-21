@@ -309,7 +309,6 @@ var validateFormOnSubmit = function () {
   var hashtagArray = textHashtagsInputNode.value.split(' ');
   var duplicatesCounter = 0;
   textHashtagsInputNode.setCustomValidity('');
-
   for (var i = 0; i < hashtagArray.length; i++) {
     // Если элементе массива '#' встречается больше 1 раза - кидаем CustomValidity
     if (hashtagArray[i].split('#').length - 1 > 1) {
@@ -326,10 +325,6 @@ var validateFormOnSubmit = function () {
     if (hashtagArray[i].length > 20) {
       textHashtagsInputNode.setCustomValidity('Длина хеш-тега не может превышать 20 символов');
     }
-    // Выносим мусор и пустоты из массива
-    while (hashtagArray[i] === '' || hashtagArray[i] === '#' || hashtagArray[i] === ' ') {
-      hashtagArray.splice(i, 1);
-    }
     // Переводим все элементы в верхний регистр и сравниваем исходный массив с самим собой. Если совпадений больше, чем длинна массива => в нем есть повторы === кидаем CustomValidity
     for (var j = 0; j < hashtagArray.length; j++) {
       if (hashtagArray[i].toUpperCase() === hashtagArray[j].toUpperCase()) {
@@ -338,6 +333,10 @@ var validateFormOnSubmit = function () {
       if (duplicatesCounter > hashtagArray.length) {
         textHashtagsInputNode.setCustomValidity('Хеш-теги не должны повторяться');
       }
+    }
+    // Выносим мусор и пустоты из массива
+    while (hashtagArray[i] === '' || hashtagArray[i] === '#' || hashtagArray[i] === ' ') {
+      hashtagArray.splice(i, 1);
     }
   }
   if (hashtagArray.length > 5) {
