@@ -311,20 +311,24 @@ var validateFormOnSubmit = function () {
   textHashtagsInputNode.setCustomValidity('');
 
   for (var i = 0; i < hashtagArray.length; i++) {
-    // Выносим мусор и пустоты из массива
-    while (hashtagArray[i] === '' || hashtagArray[i] === ',' || hashtagArray[i] === '#' || hashtagArray[i] === '=' || hashtagArray[i] === ' ') {
-      hashtagArray.splice(i, 1);
-    }
-    // Не начинается с '#' ? - поставить '#'
-    if (hashtagArray[i].slice(0, 1) !== '#') {
-      hashtagArray[i] = '#' + hashtagArray[i];
+    // Если элементе массива '#' встречается больше 1 раза - кидаем CustomValidity
+    if (hashtagArray[i].split('#').length - 1 > 1) {
+      textHashtagsInputNode.setCustomValidity('Хеш-теги должны разделяться проебелами');
     }
     // Заканчивается на '#', точку или запятую ? - убрать
     while (hashtagArray[i].slice(-1) === '#' || hashtagArray[i].slice(-1) === ',' || hashtagArray[i].slice(-1) === '.' || hashtagArray[i].slice(-1) === '/') {
       hashtagArray[i] = hashtagArray[i].slice(0, -1);
     }
+    // Не начинается с '#' ? - поставить '#'
+    if (hashtagArray[i].slice(0, 1) !== '#') {
+      hashtagArray[i] = '#' + hashtagArray[i];
+    }
     if (hashtagArray[i].length > 20) {
       textHashtagsInputNode.setCustomValidity('Длина хеш-тега не может превышать 20 символов');
+    }
+    // Выносим мусор и пустоты из массива
+    while (hashtagArray[i] === '' || hashtagArray[i] === '#' || hashtagArray[i] === ' ') {
+      hashtagArray.splice(i, 1);
     }
     // Переводим все элементы в верхний регистр и сравниваем исходный массив с самим собой. Если совпадений больше, чем длинна массива => в нем есть повторы === кидаем CustomValidity
     for (var j = 0; j < hashtagArray.length; j++) {
