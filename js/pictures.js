@@ -305,22 +305,22 @@ picturesListNode.addEventListener('click', onPictureMinClick);
 
 // --- module4-task2
 
-var validateFormOnSubmit = function () {
+textHashtagsInputNode.addEventListener('blur', function () {
   var hashtagArray = textHashtagsInputNode.value.split(' ');
   var duplicatesCounter = 0;
   textHashtagsInputNode.setCustomValidity('');
+
   for (var i = 0; i < hashtagArray.length; i++) {
     // Если элементе массива '#' встречается больше 1 раза - кидаем CustomValidity
     if (hashtagArray[i].split('#').length - 1 > 1) {
-      textHashtagsInputNode.setCustomValidity('Хеш-теги должны разделяться проебелами');
+      textHashtagsInputNode.setCustomValidity('Хеш-теги должны разделяться пробелами');
     }
-    // Заканчивается на '#', точку или запятую ? - убрать
-    while (hashtagArray[i].slice(-1) === '#' || hashtagArray[i].slice(-1) === ',' || hashtagArray[i].slice(-1) === '.' || hashtagArray[i].slice(-1) === '/') {
-      hashtagArray[i] = hashtagArray[i].slice(0, -1);
+    if (hashtagArray[i].slice(-1) === '#' || hashtagArray[i].slice(-1) === ',' || hashtagArray[i].slice(-1) === '.' || hashtagArray[i].slice(-1) === '/') {
+      textHashtagsInputNode.setCustomValidity('Хеш-тег не может заканчиваться на #, слеш, точку или иметь запятую на конце');
     }
-    // Не начинается с '#' ? - поставить '#'
-    if (hashtagArray[i].slice(0, 1) !== '#') {
-      hashtagArray[i] = '#' + hashtagArray[i];
+    // Не начинается с '#' ?
+    if (hashtagArray[i] !== '' && hashtagArray[i].slice(0, 1) !== '#') {
+      textHashtagsInputNode.setCustomValidity('Хеш-тег должен начинаться со знака #');
     }
     if (hashtagArray[i].length > 20) {
       textHashtagsInputNode.setCustomValidity('Длина хеш-тега не может превышать 20 символов');
@@ -334,9 +334,12 @@ var validateFormOnSubmit = function () {
         textHashtagsInputNode.setCustomValidity('Хеш-теги не должны повторяться');
       }
     }
-    // Выносим мусор и пустоты из массива
-    while (hashtagArray[i] === '' || hashtagArray[i] === '#' || hashtagArray[i] === ' ') {
+    // Выносим пустоты из массива
+    while (hashtagArray[i] === '' || hashtagArray[i] === ' ') {
       hashtagArray.splice(i, 1);
+    }
+    if (hashtagArray[i] === '#') {
+      textHashtagsInputNode.setCustomValidity('Хеш-тег не может состоять из одного символа #');
     }
   }
   if (hashtagArray.length > 5) {
@@ -344,6 +347,4 @@ var validateFormOnSubmit = function () {
   }
 
   textHashtagsInputNode.value = hashtagArray.join(' ');
-};
-
-textHashtagsInputNode.addEventListener('blur', validateFormOnSubmit);
+});
