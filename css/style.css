@@ -522,7 +522,6 @@ main {
   position: absolute;
   top: 0;
   left: 50%;
-  z-index: 1; /* При смене фильтров пропадали кнопки масштаба, не смог понять почему так => добавил z-index */
 
   font-family: "Open Sans", "Arial", sans-serif;
   font-weight: 400;
@@ -668,7 +667,6 @@ main {
   position: absolute;
   top: 50%;
   left: 20%;
-  z-index: 1; /* Как оказалось, .scale__level имеет индекс выше .scale_pin и потому нельзя 'схватить' пин за его середину и левый край, это вводит в конфуз => повысил индекс пина */
 
   width: 18px;
   height: 18px;
@@ -892,7 +890,7 @@ main {
   top: 60px;
   left: 50%;
 
-  min-width: 600px;
+  max-width: 600px;
   min-height: 600px;
 
   padding-bottom: 60px;
@@ -916,7 +914,7 @@ main {
       -ms-flex-direction: column;
           flex-direction: column;
 
-  min-width: 600px;
+  max-width: 600px;
 
   color: #000000;
   font-family: "Open Sans", "Arial", sans-serif;
@@ -951,10 +949,12 @@ main {
 
 .social__caption {
   margin: 0;
+  margin-right: 15px;
 }
 
 .social__likes {
   margin-left: auto;
+  min-width: 125px;
 }
 
 .likes-count {
@@ -1041,6 +1041,7 @@ main {
 
 .social__comment--text {
   padding-left: 15px;
+  padding-bottom: 20px;
 
   display: -webkit-box;
   display: -ms-flexbox;
