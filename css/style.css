@@ -522,6 +522,7 @@ main {
   position: absolute;
   top: 0;
   left: 50%;
+  z-index: 1; /* При смене фильтров пропадали кнопки масштаба, не смог понять почему так => добавил z-index */
 
   font-family: "Open Sans", "Arial", sans-serif;
   font-weight: 400;
@@ -665,6 +666,7 @@ main {
 
 .scale__pin {
   position: absolute;
+  z-index: 1; /* Как оказалось, scale__level имеет индекс выше scale_pin и потому нельзя схватить пин за его середину и левый край => повысил индекс пина */
   top: 50%;
   left: 20%;
 
