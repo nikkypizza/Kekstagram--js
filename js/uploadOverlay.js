@@ -47,6 +47,7 @@
   });
 
   window.uploadOverlay = {
-    onOverlayEscPress: onOverlayEscPress
+    onOverlayEscPress: onOverlayEscPress,
+    uploadOverlayNode: uploadOverlayNode
   };
 })();

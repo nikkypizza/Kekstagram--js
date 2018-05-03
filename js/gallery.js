@@ -35,7 +35,7 @@
     renderPhotoCards(data);
   };
 
-  window.backend.getRequest(onDataGetSuccess, window.backend.errorNotification);
+  window.backend.getRequest(onDataGetSuccess, window.backend.statusNotification);
 
   window.gallery = {
     picturesListNode: picturesListNode

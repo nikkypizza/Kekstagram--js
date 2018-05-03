@@ -46,6 +46,18 @@
     textHashtagsInputNode.value = hashtagArray.join(' ');
   });
 
+  var form = document.querySelector('.img-upload__form');
+
+  // Отменяет действие формы по умолчанию и отправляет форму посредством XHR на сервер
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    window.backend.postRequest(new FormData(form), function () {
+      window.uploadOverlay.uploadOverlayNode.classList.add('hidden');
+      form.reset();
+    }, window.backend.statusNotification);
+  });
+
   window.validation = {
     textHashtagsInputNode: textHashtagsInputNode
   };

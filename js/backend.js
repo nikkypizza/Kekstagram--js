@@ -11,6 +11,7 @@
         var alert;
         switch (xhr.status) {
           case 200:
+            alert = 'Данные загружены успешно';
             onLoad(xhr.response);
             break;
           case 400:
@@ -25,15 +26,13 @@
           default:
             onError(xhr.status + ': ' + xhr.statusText);
         }
-        if (alert) {
-          onError(alert);
-        }
+        onError(alert);
       });
       xhr.addEventListener('error', function () {
         onError('Произошла ошибка соединения, попробуйте обновить страницу');
       });
       xhr.addEventListener('timeout', function () {
-        onError('Время ожидания соединения исктекло');
+        onError('Время ожидания соединения истекло');
       });
       xhr.timeout = 10000; // 10сек
       xhr.open('GET', URL);
@@ -49,6 +48,7 @@
         var alert;
         switch (xhr.status) {
           case 200:
+            alert = 'Форма отправлена успешно';
             onLoad();
             break;
           case 400:
@@ -63,9 +63,7 @@
           default:
             alert = 'Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText;
         }
-        if (alert) {
-          onError(alert);
-        }
+        onError(alert);
       });
       xhr.addEventListener('error', function () {
         onError('Неуспешное выполнение запроса. Попробуйте обновить страницу и повторить запрос');
@@ -79,19 +77,28 @@
     },
 
     // Отрисовка окна со статусом ошибки
-    errorNotification: function (message) {
+    statusNotification: function (message) {
+      var dataGetSuccess = 'Данные загружены успешно';
+      var formPostSuccess = 'Форма отправлена успешно';
+
       var errorNode = document.createElement('div');
       errorNode.style.position = 'fixed';
-      errorNode.style.top = '15px';
+      errorNode.style.top = '5px';
       errorNode.style.width = '100%';
       errorNode.style.padding = '20px';
+      // Полупрозрачный красный
       errorNode.style.backgroundColor = 'rgba(225, 0, 0, 0.55)';
       errorNode.style.outline = '2px solid rgba(255, 0, 0, 0.7)';
       errorNode.style.textAlign = 'center';
       errorNode.style.zIndex = '100';
       errorNode.textContent = 'Эррор! ' + message;
       errorNode.id = 'serverStatus';
-
+      if (message === dataGetSuccess || message === formPostSuccess) {
+        // Полупрозрачный зеленый
+        errorNode.style.backgroundColor = 'rgba(0, 128, 0, 0.55)';
+        errorNode.style.outline = '2px solid rgba(0, 128, 0, 0.7)';
+        errorNode.textContent = message;
+      }
       document.body.insertAdjacentElement('afterbegin', errorNode);
 
       // Плавно снижает прозрачность статусного дива. Если прозрачность <= 0 > удаляет блок статуса
@@ -109,7 +116,7 @@
             setTimeout(fade, 45);
           }
         })();
-      }, 4000); // Сообщение висит 4 секунды
+      }, 3000); // Сообщение висит 3 секунды
     }
   };
 })();

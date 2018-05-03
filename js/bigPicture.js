@@ -18,8 +18,8 @@
       var commentElem = document.querySelector('.social__comment').cloneNode();
       var commentUserPic = document.querySelector('.social__picture').cloneNode(true);
       var textElem = document.createTextNode(arrElem.comments[i]);
-      // Первый коммент далее используется как шаблон. Переопределяем его св-во display с ='none' на ='flex'
-      commentElem.style.display = 'flex';
+      // Первый коммент далее используется как шаблон. Удаляем его атрибут style со св-вом display='none'
+      commentElem.removeAttribute('style');
 
       commentUserPic.src = 'img/avatar-' + window.util.getRandomNumber(1, 6) + '.svg';
       commentElem.appendChild(commentUserPic);
