@@ -7,6 +7,7 @@
   var showBigPictureWithData = function (arrElem) {
     bigPictureNode.classList.remove('hidden');
 
+    bigPictureNode.querySelector('.social__caption').textContent = arrElem.comments[0];
     bigPictureNode.querySelector('.big-picture__img img').src = arrElem.url;
     bigPictureNode.querySelector('.likes-count').textContent = arrElem.likes;
     bigPictureNode.querySelector('.comments-count').textContent = arrElem.comments.length;
@@ -17,6 +18,8 @@
       var commentElem = document.querySelector('.social__comment').cloneNode();
       var commentUserPic = document.querySelector('.social__picture').cloneNode(true);
       var textElem = document.createTextNode(arrElem.comments[i]);
+      // Первый коммент далее используется как шаблон. Переопределяем его св-во display с ='none' на ='flex'
+      commentElem.style.display = 'flex';
 
       commentUserPic.src = 'img/avatar-' + window.util.getRandomNumber(1, 6) + '.svg';
       commentElem.appendChild(commentUserPic);
@@ -29,6 +32,8 @@
     }
     // И добавляет новые
     socialCommentsList.appendChild(fragment);
+    // Первый элемент массива comments используется как social__caption, потому прячем его из socialCommentsList
+    socialCommentsList.firstChild.style.display = 'none';
     // Скрывает ноды с количеством комментариев и спиннером
     document.querySelector('.social__comment-count').classList.add('visually-hidden');
     document.querySelector('.social__comment-loadmore').classList.add('visually-hidden');
