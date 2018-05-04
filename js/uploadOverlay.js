@@ -12,7 +12,7 @@
   var textDescriptionInputNode = document.querySelector('.text__description');
 
   var onOverlayEscPress = function (evt) {
-    if (evt.keyCode === keyCodeMap.KEY_ESC && document.activeElement !== window.validation.textHashtagsInputNode && document.activeElement !== textDescriptionInputNode) {
+    if (evt.keyCode === keyCodeMap.KEY_ESC && document.activeElement !== window.formValidation.textHashtagsInputNode && document.activeElement !== textDescriptionInputNode) {
       onOverlayClose();
       window.bigPicture.bigPictureNode.classList.add('hidden');
     }
@@ -47,6 +47,7 @@
   });
 
   window.uploadOverlay = {
-    onOverlayEscPress: onOverlayEscPress
+    onOverlayEscPress: onOverlayEscPress,
+    uploadOverlayNode: uploadOverlayNode
   };
 })();

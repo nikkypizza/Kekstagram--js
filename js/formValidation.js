@@ -46,7 +46,63 @@
     textHashtagsInputNode.value = hashtagArray.join(' ');
   });
 
-  window.validation = {
-    textHashtagsInputNode: textHashtagsInputNode
+  var form = document.querySelector('.img-upload__form');
+
+  // Отменяет действие формы по умолчанию и отправляет форму посредством XHR на сервер
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    window.backend.postRequest(new FormData(form), function () {
+      window.uploadOverlay.uploadOverlayNode.classList.add('hidden');
+      form.reset();
+    }, displayXhrStatus);
+  });
+
+  // Отрисовка окна со статусом xhr запроса
+  var displayXhrStatus = function (message) {
+    var dataGetSuccess = 'Данные загружены успешно';
+    var formPostSuccess = 'Форма отправлена успешно';
+
+    var errorNode = document.createElement('div');
+    errorNode.style.position = 'fixed';
+    errorNode.style.top = '5px';
+    errorNode.style.width = '100%';
+    errorNode.style.padding = '20px';
+    // Полупрозрачный красный
+    errorNode.style.backgroundColor = 'rgba(225, 0, 0, 0.55)';
+    errorNode.style.outline = '2px solid rgba(255, 0, 0, 0.7)';
+    errorNode.style.textAlign = 'center';
+    errorNode.style.zIndex = '100';
+    errorNode.textContent = 'Эррор! ' + message;
+    errorNode.id = 'serverStatus';
+    if (message === dataGetSuccess || message === formPostSuccess) {
+      // Полупрозрачный зеленый
+      errorNode.style.backgroundColor = 'rgba(0, 128, 0, 0.55)';
+      errorNode.style.outline = '2px solid rgba(0, 128, 0, 0.7)';
+      errorNode.textContent = message;
+    }
+    document.body.insertAdjacentElement('afterbegin', errorNode);
+
+    // Плавно снижает прозрачность статусного дива. Если прозрачность <= 0 > удаляет блок статуса
+    setTimeout(function () {
+      var statusNode = document.querySelector('#serverStatus');
+      var statStyle = statusNode.style;
+      statStyle.opacity = 1;
+      (function fade() {
+        if (statStyle.opacity > 0) {
+          statStyle.opacity -= 0.1;
+        }
+        if (statStyle.opacity <= 0) {
+          statusNode.remove();
+        } else {
+          setTimeout(fade, 45);
+        }
+      })();
+    }, 3000); // Сообщение висит 3 секунды
+  };
+
+  window.formValidation = {
+    textHashtagsInputNode: textHashtagsInputNode,
+    displayXhrStatus: displayXhrStatus
   };
 })();
