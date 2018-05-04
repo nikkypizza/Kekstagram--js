@@ -3,6 +3,7 @@
 (function () {
   var bigPictureNode = document.querySelector('.big-picture');
   var bigPictureCloseNode = document.querySelector('.big-picture__cancel');
+  var picturesListNode = document.querySelector('.pictures');
 
   var showBigPictureWithData = function (arrElem) {
     bigPictureNode.classList.remove('hidden');
@@ -54,7 +55,7 @@
   };
 
   // Открывает большую картинку по клику на миниатюру, вешает обработчик закрытия
-  window.gallery.picturesListNode.addEventListener('click', onPictureMinClick);
+  picturesListNode.addEventListener('click', onPictureMinClick);
 
   window.bigPicture = {
     bigPictureNode: bigPictureNode
