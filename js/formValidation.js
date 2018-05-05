@@ -65,7 +65,7 @@
 
     var errorNode = document.createElement('div');
     errorNode.style.position = 'fixed';
-    errorNode.style.top = '5px';
+    errorNode.style.top = '60px';
     errorNode.style.width = '100%';
     errorNode.style.padding = '20px';
     // Полупрозрачный красный
