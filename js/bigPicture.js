@@ -40,6 +40,7 @@
     document.querySelector('.social__comment-loadmore').classList.add('visually-hidden');
   };
   var onPictureMinClick = function (evt) {
+
     if (evt.target.parentElement.className === 'picture__link') {
       var target = evt.target;
       for (var i = 0; i < window.gallery.allPhotosArr.length; i++) {
@@ -48,10 +49,14 @@
         }
       }
       document.addEventListener('keydown', window.uploadOverlay.onOverlayEscPress);
+
+      document.body.classList.add('modal-open'); // ТЗ 4.3
       bigPictureCloseNode.addEventListener('click', function () {
+        document.body.removeAttribute('class');
         bigPictureNode.classList.add('hidden');
       });
     }
+
   };
 
   // Открывает большую картинку по клику на миниатюру, вешает обработчик закрытия
