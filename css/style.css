@@ -819,6 +819,10 @@ main {
   border-radius: 5px;
 }
 
+.text__hashtags:invalid {
+  border: 3px dashed red;
+}
+
 .text__description {
   width: 450px;
   height: 100px;

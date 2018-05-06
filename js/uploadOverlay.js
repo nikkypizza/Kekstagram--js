@@ -17,23 +17,28 @@
       window.bigPicture.bigPictureNode.classList.add('hidden');
     }
   };
+  // Обнуляет все изменения модального окна
+  var resetAllFormFilters = function () {
+    window.photoEffects.uploadPreviewNode.style = '';
+    window.photoEffects.uploadPreviewImgNode.style = '';
+    window.photoEffects.uploadPreviewImgNode.removeAttribute('class');
+    window.photoEffects.scaleValueInputNode.removeAttribute('value');
+    window.photoEffects.resizeValueInput.value = '100%';
+    window.photoEffects.filterNoneNode.checked = true;
+  };
+
   var onOverlayOpen = function () {
     uploadOverlayNode.classList.remove('hidden');
     window.photoEffects.effectScaleNode.classList.add('hidden');
     document.addEventListener('keydown', onOverlayEscPress);
+    resetAllFormFilters(); // Обнуляет при открытии, ибо xhr отменяет действие формы по умалчанию
   };
-  // При закрытии модалки возвращает все поля формы и значения фильтра в исходное положение
-  var onOverlayClose = function () {
-    uploadOverlayNode.classList.add('hidden');
 
-    // Обнуляет все изменения при закрытии модального окна
+  var onOverlayClose = function () {
+    document.body.removeAttribute('class');
+    uploadOverlayNode.classList.add('hidden');
     uploadFileInputNode.value = '';
-    window.photoEffects.uploadPreviewNode.removeAttribute('style');
-    window.photoEffects.uploadPreviewNode.removeAttribute('class');
-    window.photoEffects.scaleValueInputNode.removeAttribute('value');
-    window.photoEffects.uploadPreviewNode.querySelector('img').removeAttribute('style');
-    window.photoEffects.resizeValueInput.value = 100 + '%';
-    window.photoEffects.filterNoneNode.selected = true;
+    resetAllFormFilters();
     document.removeEventListener('keydown', onOverlayEscPress);
   };
 
@@ -48,6 +53,7 @@
 
   window.uploadOverlay = {
     onOverlayEscPress: onOverlayEscPress,
-    uploadOverlayNode: uploadOverlayNode
+    uploadOverlayNode: uploadOverlayNode,
+    resetAllFormFilters: resetAllFormFilters
   };
 })();

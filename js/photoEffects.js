@@ -3,6 +3,7 @@
 (function () {
   var filtersListNode = document.querySelector('.effects__list');
   var uploadPreviewNode = document.querySelector('.img-upload__preview');
+  var uploadPreviewImgNode = uploadPreviewNode.querySelector('img');
   // Список переменных шкалы фильтра
   var effectScaleNode = document.querySelector('.img-upload__scale');
   var scaleLineNode = effectScaleNode.querySelector('.scale__line');
@@ -37,39 +38,38 @@
     };
     var depth = getEffectDepth();
     if (filterChromeNode.checked) {
-      uploadPreviewNode.style = 'filter: grayscale(' + depth + ');';
+      uploadPreviewImgNode.style = 'filter: grayscale(' + depth + ');';
       scaleValueInputNode.setAttribute('value', depth);
     }
     if (filterSepiaNode.checked) {
-      uploadPreviewNode.style = 'filter: sepia(' + depth + ');';
+      uploadPreviewImgNode.style = 'filter: sepia(' + depth + ');';
       scaleValueInputNode.setAttribute('value', depth);
     }
     if (filterMarvinNode.checked) {
-      uploadPreviewNode.style = 'filter: invert(' + depth * 100 + '%);';
+      uploadPreviewImgNode.style = 'filter: invert(' + depth * 100 + '%);';
       scaleValueInputNode.setAttribute('value', depth * 100 + '%');
     }
     if (filterPhobosNode.checked) {
-      uploadPreviewNode.style = 'filter: blur(' + depth * 3 + 'px);';
+      uploadPreviewImgNode.style = 'filter: blur(' + depth * 3 + 'px);';
       scaleValueInputNode.setAttribute('value', (depth * 3).toFixed(2) + 'px');
     }
     if (filterHeatNode.checked) {
-      uploadPreviewNode.style = 'filter: brightness(' + depth * 3 + ');';
+      uploadPreviewImgNode.style = 'filter: brightness(' + depth * 3 + ');';
       scaleValueInputNode.setAttribute('value', (depth * 3).toFixed(2));
     }
   };
 
   var onFilterChange = function (scaleIsHidden, filterClassNameAdd) {
-    uploadPreviewNode.removeAttribute('class');
+    uploadPreviewImgNode.removeAttribute('class');
     // Если шкала спрятана ( === выбран вариант без фильтра) - обнуляет фильтры превью и значение фильтра в форме
     if (scaleIsHidden) {
       effectScaleNode.classList.add('hidden');
-      uploadPreviewNode.removeAttribute('style');
       scaleValueInputNode.removeAttribute('value');
     } else {
       effectScaleNode.classList.remove('hidden');
     }
     if (filterClassNameAdd) {
-      uploadPreviewNode.className = filterClassNameAdd;
+      uploadPreviewImgNode.className = filterClassNameAdd;
     }
     // При переключении фильтров - увеличивает значение фильтра до 100% согласно ТЗ
     scalePinNode.style.left = scaleLineNode.offsetWidth + 'px';
@@ -137,23 +137,22 @@
 
   // Меняет размер изображения, записывает данные в инпут
   var onImgResize = function (scaleDown, scaleUp) {
-    var img = uploadPreviewNode.querySelector('img');
     var inputValue = parseInt(resizeValueInput.value, 10);
     var maxValue = 100;
     var minValue = 25;
     var step = 25;
     if (scaleDown) {
       if (inputValue > minValue) {
-        img.style.transform = 'scale(0.' + (inputValue - step) + ')';
+        uploadPreviewNode.style.transform = 'scale(0.' + (inputValue - step) + ')';
         resizeValueInput.value = inputValue - step + '%';
       }
     }
     if (scaleUp) {
       if (inputValue < maxValue) {
-        img.style.transform = 'scale(0.' + (inputValue + step) + ')';
+        uploadPreviewNode.style.transform = 'scale(0.' + (inputValue + step) + ')';
         resizeValueInput.value = inputValue + step + '%';
         if (parseInt(resizeValueInput.value, 10) === maxValue) {
-          img.removeAttribute('style');
+          uploadPreviewNode.removeAttribute('style');
           resizeValueInput.value = maxValue + '%';
         }
       }
@@ -175,6 +174,7 @@
     filterNoneNode: filterNoneNode,
     effectScaleNode: effectScaleNode,
     uploadPreviewNode: uploadPreviewNode,
+    uploadPreviewImgNode: uploadPreviewImgNode,
     scaleValueInputNode: scaleValueInputNode,
     resizeValueInput: resizeValueInput
   };
