@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var keyCodeMap = {
     KEY_ESC: 27,
     KEY_ENTER: 13
@@ -25,6 +26,7 @@
     window.photoEffects.scaleValueInputNode.removeAttribute('value');
     window.photoEffects.resizeValueInput.value = '100%';
     window.photoEffects.filterNoneNode.checked = true;
+    window.photoEffects.uploadPreviewImgNode.src = 'img/upload-default-image.jpg'; // Возвращает превью в значение по умолчанию
   };
 
   var onOverlayOpen = function () {
@@ -48,6 +50,22 @@
   uploadOverlayCloseNode.addEventListener('keydown', function (evt) {
     if (evt.keyCode === keyCodeMap.KEY_ENTER) {
       onOverlayClose();
+    }
+  });
+
+  // Подставляет в превью загружаемый файл
+  uploadFileInputNode.addEventListener('change', function () {
+    var file = uploadFileInputNode.files[0];
+    var fileName = file.name.toLowerCase();
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+    if (matches) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        window.photoEffects.uploadPreviewImgNode.src = reader.result;
+      });
+      reader.readAsDataURL(file);
     }
   });
 
