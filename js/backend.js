@@ -29,25 +29,26 @@
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.addEventListener('load', function () {
-        var message;
+        var errorMessage;
         switch (xhr.status) {
           case 200:
-            message = 'Данные загружены успешно';
             onLoad(xhr.response);
             break;
           case 400:
-            message = 'Неверный запрос';
+            errorMessage = 'Неверный запрос';
             break;
           case 401:
-            message = 'Пользователь не авторизован';
+            errorMessage = 'Пользователь не авторизован';
             break;
           case 404:
-            message = 'Ничего не найдено';
+            errorMessage = 'Ничего не найдено';
             break;
           default:
             onError(xhr.status + ': ' + xhr.statusText);
         }
-        onError(message);
+        if (errorMessage) {
+          onError(errorMessage);
+        }
       });
       xhr.addEventListener('error', function () {
         onError('Произошла ошибка соединения, попробуйте обновить страницу');
@@ -66,29 +67,30 @@
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.addEventListener('load', function () {
-        var message;
+        var errorMessage;
         switch (xhr.status) {
           case 200:
-            message = 'Форма отправлена успешно';
             onLoad();
             break;
           case 400:
-            message = 'Неверный запрос';
+            errorMessage = 'Неверный запрос';
             onPostRequestError();
             break;
           case 401:
-            message = 'Пользователь не авторизован';
+            errorMessage = 'Пользователь не авторизован';
             onPostRequestError();
             break;
           case 404:
-            message = 'Ничего не найдено';
+            errorMessage = 'Ничего не найдено';
             onPostRequestError();
             break;
           default:
-            message = 'Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText;
+            errorMessage = 'Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText;
             onPostRequestError();
         }
-        onError(message);
+        if (errorMessage) {
+          onError(errorMessage);
+        }
       });
       xhr.addEventListener('error', function () {
         onError('Неуспешное выполнение запроса. Попробуйте обновить страницу и повторить запрос');

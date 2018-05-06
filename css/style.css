@@ -820,7 +820,7 @@ main {
 }
 
 .text__hashtags:invalid {
-  border: 3px dashed red;
+  border: 3px solid red;
 }
 
 .text__description {

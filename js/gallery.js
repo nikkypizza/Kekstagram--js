@@ -67,12 +67,14 @@
 
   /*
 Коллбек при удачной загрузке данных через XHR
-отрисовывает все миниатюры фотографий и показывает панель сортировки
+отрисовывает все миниатюры фотографий, панель сортировки
+и показывает сообщение об успешной загрузке
 */
   var onDataGetSuccess = function (data) {
     xhrPhotos = data;
     window.gallery.allPhotosArr = xhrPhotos;
 
+    window.formValidation.displayXhrStatus('Данные загружены успешно');
     renderPhotoCards(xhrPhotos);
     sortingContainerNode.classList.remove('img-filters--inactive');
     [].forEach.call(sortingButtons, function (button) {

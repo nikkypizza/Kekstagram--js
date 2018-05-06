@@ -55,6 +55,7 @@
     window.backend.postRequest(new FormData(uploadFormNode), function () {
       window.uploadOverlay.uploadOverlayNode.classList.add('hidden');
       uploadFormNode.reset();
+      displayXhrStatus('Форма отправлена успешно');
     }, displayXhrStatus);
   });
 
