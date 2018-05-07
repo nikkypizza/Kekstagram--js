@@ -1,9 +1,13 @@
 'use strict';
 
 (function () {
-  var textHashtagsInputNode = document.querySelector('.text__hashtags');
-  var formSubmitBtn = document.querySelector('#upload-submit');
+  var xhrStatusNodeConstantsMap = {
+    REMOVE_TIMEOUT: 3000, // 3 секунды
+    OPACITY_REFRESH_RATE: 45
+  };
   var uploadFormNode = document.querySelector('.img-upload__form');
+  var textHashtagsInputNode = uploadFormNode.querySelector('.text__hashtags');
+  var formSubmitBtn = uploadFormNode.querySelector('#upload-submit');
 
   formSubmitBtn.addEventListener('click', function () {
     var hashtagArray = textHashtagsInputNode.value.split(' ');
@@ -53,7 +57,7 @@
     evt.preventDefault();
 
     window.backend.postRequest(new FormData(uploadFormNode), function () {
-      window.uploadOverlay.uploadOverlayNode.classList.add('hidden');
+      window.uploadOverlay.node.classList.add('hidden');
       uploadFormNode.reset();
       displayXhrStatus('Форма отправлена успешно');
     }, displayXhrStatus);
@@ -87,17 +91,19 @@
       var statusNode = document.querySelector('#serverStatus');
       var statStyle = statusNode.style;
       statStyle.opacity = 1;
-      (function fade() {
+
+      var slowlyRemoveStatusNode = function () {
         if (statStyle.opacity > 0) {
           statStyle.opacity -= 0.1;
         }
         if (statStyle.opacity <= 0) {
           statusNode.remove();
         } else {
-          setTimeout(fade, 45);
+          setTimeout(slowlyRemoveStatusNode, xhrStatusNodeConstantsMap.OPACITY_REFRESH_RATE);
         }
-      })();
-    }, 3000); // Сообщение висит 3 секунды
+      };
+      slowlyRemoveStatusNode();
+    }, xhrStatusNodeConstantsMap.REMOVE_TIMEOUT);
   };
 
   window.formValidation = {

@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var DEBOUNCE_INTERVAL = 500;
+  var IMG_SORT_DEBOUNCE_INTERVAL = 500;
   var sortingContainerNode = document.querySelector('.img-filters ');
   var sortingButtons = sortingContainerNode.querySelectorAll('.img-filters__button');
   var picturesBlock = document.querySelector('.pictures');
@@ -62,7 +62,7 @@
     }
     lastTimeout = window.setTimeout(function () {
       renderPhotoCards(photosCopy);
-    }, DEBOUNCE_INTERVAL);
+    }, IMG_SORT_DEBOUNCE_INTERVAL);
   };
 
   /*

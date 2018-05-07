@@ -2,7 +2,8 @@
 
 (function () {
   var bigPictureNode = document.querySelector('.big-picture');
-  var bigPictureCloseNode = document.querySelector('.big-picture__cancel');
+  var bigPictureCloseNode = bigPictureNode.querySelector('.big-picture__cancel');
+  var socialCommentsList = bigPictureCloseNode.querySelector('.social__comments');
   var picturesListNode = document.querySelector('.pictures');
 
   var showBigPictureWithData = function (arrElem) {
@@ -15,15 +16,14 @@
 
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < arrElem.comments.length; i++) {
-      var socialCommentsList = document.querySelector('.social__comments');
       var commentElem = document.querySelector('.social__comment').cloneNode();
-      var commentUserPic = document.querySelector('.social__picture').cloneNode(true);
+      var commentUserAvatarPicture = document.querySelector('.social__picture').cloneNode(true);
       var textElem = document.createTextNode(arrElem.comments[i]);
       // Первый коммент далее используется как шаблон. Удаляем его атрибут style со св-вом display='none'
-      commentElem.removeAttribute('style');
+      commentElem.style = null;
 
-      commentUserPic.src = 'img/avatar-' + window.util.getRandomNumber(1, 6) + '.svg';
-      commentElem.appendChild(commentUserPic);
+      commentUserAvatarPicture.src = 'img/avatar-' + window.util.getRandomNumber(1, 6) + '.svg';
+      commentElem.appendChild(commentUserAvatarPicture);
       commentElem.appendChild(textElem);
       fragment.appendChild(commentElem);
     }
@@ -52,7 +52,7 @@
 
       document.body.classList.add('modal-open'); // ТЗ 4.3
       bigPictureCloseNode.addEventListener('click', function () {
-        document.body.removeAttribute('class');
+        document.body.classList.remove('modal-open');
         bigPictureNode.classList.add('hidden');
       });
     }
@@ -63,6 +63,6 @@
   picturesListNode.addEventListener('click', onPictureMinClick);
 
   window.bigPicture = {
-    bigPictureNode: bigPictureNode
+    node: bigPictureNode
   };
 })();

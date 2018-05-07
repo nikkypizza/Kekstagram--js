@@ -7,23 +7,22 @@
     KEY_ENTER: 13
   };
 
-  var uploadFileInputNode = document.querySelector('#upload-file');
   var uploadOverlayNode = document.querySelector('.img-upload__overlay');
-  var uploadOverlayCloseNode = document.querySelector('#upload-cancel');
-  var textDescriptionInputNode = document.querySelector('.text__description');
+  var uploadOverlayCloseNode = uploadOverlayNode.querySelector('#upload-cancel');
+  var textDescriptionInputNode = uploadOverlayNode.querySelector('.text__description');
+  var uploadFileInputNode = document.querySelector('#upload-file');
 
   var onOverlayEscPress = function (evt) {
     if (evt.keyCode === keyCodeMap.KEY_ESC && document.activeElement !== window.formValidation.textHashtagsInputNode && document.activeElement !== textDescriptionInputNode) {
       onOverlayClose();
-      window.bigPicture.bigPictureNode.classList.add('hidden');
+      window.bigPicture.node.classList.add('hidden');
     }
   };
   // Обнуляет все изменения модального окна
   var resetAllFormFilters = function () {
-    window.photoEffects.uploadPreviewNode.style = '';
     window.photoEffects.uploadPreviewImgNode.style = '';
-    window.photoEffects.uploadPreviewImgNode.removeAttribute('class');
-    window.photoEffects.scaleValueInputNode.removeAttribute('value');
+    window.photoEffects.uploadPreviewImgNode.classList = '';
+    window.photoEffects.scaleValueInputNode.value = null;
     window.photoEffects.resizeValueInput.value = '100%';
     window.photoEffects.filterNoneNode.checked = true;
     window.photoEffects.uploadPreviewImgNode.src = 'img/upload-default-image.jpg'; // Возвращает превью в значение по умолчанию
@@ -37,7 +36,7 @@
   };
 
   var onOverlayClose = function () {
-    document.body.removeAttribute('class');
+    document.body.classList.remove('modal-open');
     uploadOverlayNode.classList.add('hidden');
     uploadFileInputNode.value = '';
     resetAllFormFilters();
@@ -70,8 +69,8 @@
   });
 
   window.uploadOverlay = {
+    node: uploadOverlayNode,
     onOverlayEscPress: onOverlayEscPress,
-    uploadOverlayNode: uploadOverlayNode,
     resetAllFormFilters: resetAllFormFilters
   };
 })();

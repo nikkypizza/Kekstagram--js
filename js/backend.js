@@ -1,13 +1,18 @@
 'use strict';
 
 (function () {
+  var XHR_TIMEOUT = 10000; // 10сек
+  var xhrRequestAddressMap = {
+    GET: 'https://js.dump.academy/kekstagram/data',
+    POST: 'https://js.dump.academy/kekstagram'
+  };
   // Если при отправке данных произошла ошибка запроса = показать блок. ТЗ 3.4
   var onPostRequestError = function () {
     var errorNode = document.querySelector('.img-upload__message--error');
     var tryAgainLink = errorNode.firstElementChild.firstElementChild;
     var uploadAgainLink = errorNode.firstElementChild.lastElementChild;
     var imgUploadInput = document.querySelector('.img-upload__input');
-    window.uploadOverlay.uploadOverlayNode.classList.add('hidden');
+    window.uploadOverlay.node.classList.add('hidden');
 
     window.uploadOverlay.resetAllFormFilters();
     errorNode.classList.remove('hidden');
@@ -25,7 +30,6 @@
   window.backend = {
     // Функция получения данных
     getRequest: function (onLoad, onError) {
-      var URL = 'https://js.dump.academy/kekstagram/data';
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.addEventListener('load', function () {
@@ -56,14 +60,13 @@
       xhr.addEventListener('timeout', function () {
         onError('Время ожидания соединения истекло');
       });
-      xhr.timeout = 10000; // 10сек
-      xhr.open('GET', URL);
+      xhr.timeout = XHR_TIMEOUT;
+      xhr.open('GET', xhrRequestAddressMap.GET);
       xhr.send();
     },
 
     // Функция отправки данных
     postRequest: function (data, onLoad, onError) {
-      var URL = 'https://js.dump.academy/kekstagram';
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.addEventListener('load', function () {
@@ -100,8 +103,8 @@
         onError('Время ожидания соединения исктекло.');
         onPostRequestError();
       });
-      xhr.timeout = 10000; // 10сек
-      xhr.open('POST', URL);
+      xhr.timeout = XHR_TIMEOUT;
+      xhr.open('POST', xhrRequestAddressMap.POST);
       xhr.send(data);
     },
   };

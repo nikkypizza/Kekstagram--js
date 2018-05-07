@@ -1,21 +1,26 @@
 'use strict';
 
 (function () {
-  var filtersListNode = document.querySelector('.effects__list');
-  var uploadPreviewNode = document.querySelector('.img-upload__preview');
-  var uploadPreviewImgNode = uploadPreviewNode.querySelector('img');
+  // Константы фунцкции onImgResize
+  var resizeFilterMap = {
+    MAX_RESIZE_VALUE: 100,
+    MIN_RESIZE_VALUE: 25,
+    RESIZE_STEP: 25,
+  };
+  var uploadPreviewImgNode = document.querySelector('.img-upload__preview img');
   // Список переменных шкалы фильтра
   var effectScaleNode = document.querySelector('.img-upload__scale');
+  var scaleValueInputNode = effectScaleNode.querySelector('.scale__value');
   var scaleLineNode = effectScaleNode.querySelector('.scale__line');
   var scalePinNode = scaleLineNode.querySelector('.scale__pin');
   var scaleLevelNode = scaleLineNode.querySelector('.scale__level');
-  var scaleValueInputNode = effectScaleNode.querySelector('.scale__value');
   // Список переменных ноды изменения размеров
   var uploadResizeNode = document.querySelector('.img-upload__resize');
   var resizeMinusNode = uploadResizeNode.querySelector('.resize__control--minus');
   var resizePlusNode = uploadResizeNode.querySelector('.resize__control--plus');
   var resizeValueInput = uploadResizeNode.querySelector('.resize__control--value');
   // Список элементов-фильтров по ID
+  var filtersListNode = document.querySelector('.effects__list');
   var filterChromeNode = filtersListNode.querySelector('#effect-chrome');
   var filterSepiaNode = filtersListNode.querySelector('#effect-sepia');
   var filterMarvinNode = filtersListNode.querySelector('#effect-marvin');
@@ -38,33 +43,34 @@
     };
     var depth = getEffectDepth();
     if (filterChromeNode.checked) {
-      uploadPreviewImgNode.style = 'filter: grayscale(' + depth + ');';
+      uploadPreviewImgNode.style.filter = 'grayscale(' + depth + ')';
       scaleValueInputNode.setAttribute('value', depth);
     }
     if (filterSepiaNode.checked) {
-      uploadPreviewImgNode.style = 'filter: sepia(' + depth + ');';
+      uploadPreviewImgNode.style.filter = 'sepia(' + depth + ')';
       scaleValueInputNode.setAttribute('value', depth);
     }
     if (filterMarvinNode.checked) {
-      uploadPreviewImgNode.style = 'filter: invert(' + depth * 100 + '%);';
+      uploadPreviewImgNode.style.filter = 'invert(' + depth * 100 + '%)';
       scaleValueInputNode.setAttribute('value', depth * 100 + '%');
     }
     if (filterPhobosNode.checked) {
-      uploadPreviewImgNode.style = 'filter: blur(' + depth * 3 + 'px);';
+      uploadPreviewImgNode.style.filter = 'blur(' + depth * 3 + 'px)';
       scaleValueInputNode.setAttribute('value', (depth * 3).toFixed(2) + 'px');
     }
     if (filterHeatNode.checked) {
-      uploadPreviewImgNode.style = 'filter: brightness(' + depth * 3 + ');';
+      uploadPreviewImgNode.style.filter = 'brightness(' + depth * 3 + ')';
       scaleValueInputNode.setAttribute('value', (depth * 3).toFixed(2));
     }
   };
 
   var onFilterChange = function (scaleIsHidden, filterClassNameAdd) {
-    uploadPreviewImgNode.removeAttribute('class');
+    uploadPreviewImgNode.classList = '';
     // Если шкала спрятана ( === выбран вариант без фильтра) - обнуляет фильтры превью и значение фильтра в форме
     if (scaleIsHidden) {
       effectScaleNode.classList.add('hidden');
-      scaleValueInputNode.removeAttribute('value');
+      uploadPreviewImgNode.style.filter = null;
+      scaleValueInputNode.value = null;
     } else {
       effectScaleNode.classList.remove('hidden');
     }
@@ -138,22 +144,19 @@
   // Меняет размер изображения, записывает данные в инпут
   var onImgResize = function (scaleDown, scaleUp) {
     var inputValue = parseInt(resizeValueInput.value, 10);
-    var maxValue = 100;
-    var minValue = 25;
-    var step = 25;
     if (scaleDown) {
-      if (inputValue > minValue) {
-        uploadPreviewNode.style.transform = 'scale(0.' + (inputValue - step) + ')';
-        resizeValueInput.value = inputValue - step + '%';
+      if (inputValue > resizeFilterMap.MIN_RESIZE_VALUE) {
+        uploadPreviewImgNode.style.transform = 'scale(0.' + (inputValue - resizeFilterMap.RESIZE_STEP) + ')';
+        resizeValueInput.value = inputValue - resizeFilterMap.RESIZE_STEP + '%';
       }
     }
     if (scaleUp) {
-      if (inputValue < maxValue) {
-        uploadPreviewNode.style.transform = 'scale(0.' + (inputValue + step) + ')';
-        resizeValueInput.value = inputValue + step + '%';
-        if (parseInt(resizeValueInput.value, 10) === maxValue) {
-          uploadPreviewNode.removeAttribute('style');
-          resizeValueInput.value = maxValue + '%';
+      if (inputValue < resizeFilterMap.MAX_RESIZE_VALUE) {
+        uploadPreviewImgNode.style.transform = 'scale(0.' + (inputValue + resizeFilterMap.RESIZE_STEP) + ')';
+        resizeValueInput.value = inputValue + resizeFilterMap.RESIZE_STEP + '%';
+        if (parseInt(resizeValueInput.value, 10) === resizeFilterMap.MAX_RESIZE_VALUE) {
+          uploadPreviewImgNode.style.transform = null;
+          resizeValueInput.value = resizeFilterMap.MAX_RESIZE_VALUE + '%';
         }
       }
     }
@@ -173,7 +176,6 @@
   window.photoEffects = {
     filterNoneNode: filterNoneNode,
     effectScaleNode: effectScaleNode,
-    uploadPreviewNode: uploadPreviewNode,
     uploadPreviewImgNode: uploadPreviewImgNode,
     scaleValueInputNode: scaleValueInputNode,
     resizeValueInput: resizeValueInput
