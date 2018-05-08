@@ -18,7 +18,7 @@
   var uploadResizeNode = document.querySelector('.img-upload__resize');
   var resizeMinusNode = uploadResizeNode.querySelector('.resize__control--minus');
   var resizePlusNode = uploadResizeNode.querySelector('.resize__control--plus');
-  var resizeValueInput = uploadResizeNode.querySelector('.resize__control--value');
+  var resizeValueInputNode = uploadResizeNode.querySelector('.resize__control--value');
   // Список элементов-фильтров по ID
   var filtersListNode = document.querySelector('.effects__list');
   var filterChromeNode = filtersListNode.querySelector('#effect-chrome');
@@ -65,9 +65,9 @@
   };
 
   var onFilterChange = function (scaleIsHidden, filterClassNameAdd) {
-    uploadPreviewImgNode.classList = '';
-    // Если шкала спрятана ( === выбран вариант без фильтра) - обнуляет фильтры превью и значение фильтра в форме
     if (scaleIsHidden) {
+      // Если шкала спрятана (выбран вариант без фильтра) === обнуляет фильтры превью и значение фильтра в форме
+      uploadPreviewImgNode.classList = '';
       effectScaleNode.classList.add('hidden');
       uploadPreviewImgNode.style.filter = null;
       scaleValueInputNode.value = null;
@@ -143,20 +143,20 @@
 
   // Меняет размер изображения, записывает данные в инпут
   var onImgResize = function (scaleDown, scaleUp) {
-    var inputValue = parseInt(resizeValueInput.value, 10);
+    var inputValue = parseInt(resizeValueInputNode.value, 10);
     if (scaleDown) {
       if (inputValue > resizeFilterMap.MIN_RESIZE_VALUE) {
         uploadPreviewImgNode.style.transform = 'scale(0.' + (inputValue - resizeFilterMap.RESIZE_STEP) + ')';
-        resizeValueInput.value = inputValue - resizeFilterMap.RESIZE_STEP + '%';
+        resizeValueInputNode.value = inputValue - resizeFilterMap.RESIZE_STEP + '%';
       }
     }
     if (scaleUp) {
       if (inputValue < resizeFilterMap.MAX_RESIZE_VALUE) {
         uploadPreviewImgNode.style.transform = 'scale(0.' + (inputValue + resizeFilterMap.RESIZE_STEP) + ')';
-        resizeValueInput.value = inputValue + resizeFilterMap.RESIZE_STEP + '%';
-        if (parseInt(resizeValueInput.value, 10) === resizeFilterMap.MAX_RESIZE_VALUE) {
+        resizeValueInputNode.value = inputValue + resizeFilterMap.RESIZE_STEP + '%';
+        if (parseInt(resizeValueInputNode.value, 10) === resizeFilterMap.MAX_RESIZE_VALUE) {
           uploadPreviewImgNode.style.transform = null;
-          resizeValueInput.value = resizeFilterMap.MAX_RESIZE_VALUE + '%';
+          resizeValueInputNode.value = resizeFilterMap.MAX_RESIZE_VALUE + '%';
         }
       }
     }
@@ -178,6 +178,6 @@
     effectScaleNode: effectScaleNode,
     uploadPreviewImgNode: uploadPreviewImgNode,
     scaleValueInputNode: scaleValueInputNode,
-    resizeValueInput: resizeValueInput
+    resizeValueInputNode: resizeValueInputNode
   };
 })();

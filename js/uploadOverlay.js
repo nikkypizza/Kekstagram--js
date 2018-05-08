@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var IMG_DEFAULT_PREVIEW_SRC = 'img/upload-default-image.jpg';
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var keyCodeMap = {
     KEY_ESC: 27,
@@ -10,7 +11,15 @@
   var uploadOverlayNode = document.querySelector('.img-upload__overlay');
   var uploadOverlayCloseNode = uploadOverlayNode.querySelector('#upload-cancel');
   var textDescriptionInputNode = uploadOverlayNode.querySelector('.text__description');
+  var filtersPreviewNodes = uploadOverlayNode.querySelectorAll('.effects__preview');
   var uploadFileInputNode = document.querySelector('#upload-file');
+
+  var replaceFiltersPreviewImageAddress = function (address) {
+    window.photoEffects.uploadPreviewImgNode.src = address;
+    filtersPreviewNodes.forEach(function (el) {
+      el.style.backgroundImage = 'url(' + address + ')'; // Подставляет превью в миниатюры фильтров
+    });
+  };
 
   var onOverlayEscPress = function (evt) {
     if (evt.keyCode === keyCodeMap.KEY_ESC && document.activeElement !== window.formValidation.textHashtagsInputNode && document.activeElement !== textDescriptionInputNode) {
@@ -20,26 +29,24 @@
   };
   // Обнуляет все изменения модального окна
   var resetAllFormFilters = function () {
+    window.photoEffects.effectScaleNode.classList.add('hidden');
     window.photoEffects.uploadPreviewImgNode.style = '';
     window.photoEffects.uploadPreviewImgNode.classList = '';
     window.photoEffects.scaleValueInputNode.value = null;
-    window.photoEffects.resizeValueInput.value = '100%';
-    window.photoEffects.filterNoneNode.checked = true;
-    window.photoEffects.uploadPreviewImgNode.src = 'img/upload-default-image.jpg'; // Возвращает превью в значение по умолчанию
+    window.photoEffects.resizeValueInputNode.value = '100%';
+    replaceFiltersPreviewImageAddress(IMG_DEFAULT_PREVIEW_SRC); // Возвращает превью в значение по умолчанию
   };
 
   var onOverlayOpen = function () {
-    uploadOverlayNode.classList.remove('hidden');
-    window.photoEffects.effectScaleNode.classList.add('hidden');
     document.addEventListener('keydown', onOverlayEscPress);
-    resetAllFormFilters(); // Обнуляет при открытии, ибо xhr отменяет действие формы по умалчанию
+    uploadOverlayNode.classList.remove('hidden');
   };
 
   var onOverlayClose = function () {
-    document.body.classList.remove('modal-open');
     uploadOverlayNode.classList.add('hidden');
+    document.body.classList.remove('modal-open');
     uploadFileInputNode.value = '';
-    resetAllFormFilters();
+    resetAllFormFilters(); // ТЗ 3.5
     document.removeEventListener('keydown', onOverlayEscPress);
   };
 
@@ -54,17 +61,17 @@
 
   // Подставляет в превью загружаемый файл
   uploadFileInputNode.addEventListener('change', function () {
-    var file = uploadFileInputNode.files[0];
-    var fileName = file.name.toLowerCase();
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.endsWith(it);
+    var firstUploadedFile = uploadFileInputNode.files[0];
+    var fileName = firstUploadedFile.name.toLowerCase();
+    var matches = FILE_TYPES.some(function (el) {
+      return fileName.endsWith(el);
     });
     if (matches) {
       var reader = new FileReader();
       reader.addEventListener('load', function () {
-        window.photoEffects.uploadPreviewImgNode.src = reader.result;
+        replaceFiltersPreviewImageAddress(reader.result); // Подставляет превью загруженного изображения
       });
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(firstUploadedFile);
     }
   });
 

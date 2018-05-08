@@ -1,19 +1,19 @@
 'use strict';
 
 (function () {
-  var IMG_SORT_DEBOUNCE_INTERVAL = 500;
+  var IMG_SORT_DEBOUNCE_INTERVAL = 500; // 0.5 секунд
   var sortingContainerNode = document.querySelector('.img-filters ');
-  var sortingButtons = sortingContainerNode.querySelectorAll('.img-filters__button');
-  var picturesBlock = document.querySelector('.pictures');
+  var sortingButtonsNodes = sortingContainerNode.querySelectorAll('.img-filters__button');
+  var picturesNode = document.querySelector('.pictures');
   var xhrPhotos;
   var lastTimeout;
 
   // Удаляет все текущие миниатюры перед отрисовкой отсортированных миниатюр
   var removeOldPhotos = function () {
-    var oldPhotos = picturesBlock.querySelectorAll('.picture__link');
+    var oldPhotos = picturesNode.querySelectorAll('.picture__link');
     if (oldPhotos !== null) {
-      [].forEach.call(oldPhotos, function (element) {
-        picturesBlock.removeChild(element);
+      [].forEach.call(oldPhotos, function (el) {
+        picturesNode.removeChild(el);
       });
     }
   };
@@ -23,13 +23,14 @@
     removeOldPhotos();
     var photoTemplateNode = document.querySelector('#picture').content.querySelector('.picture__link');
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < arr.length; i++) {
+
+    arr.forEach(function (el) {
       var photoElement = photoTemplateNode.cloneNode(true);
-      photoElement.querySelector('.picture__img').src = arr[i].url;
-      photoElement.querySelector('.picture__stat--comments').textContent = arr[i].comments.length - 1;
-      photoElement.querySelector('.picture__stat--likes').textContent = arr[i].likes;
+      photoElement.querySelector('.picture__img').src = el.url;
+      photoElement.querySelector('.picture__stat--comments').textContent = el.comments.length - 1;
+      photoElement.querySelector('.picture__stat--likes').textContent = el.likes;
       fragment.appendChild(photoElement);
-    }
+    });
     document.querySelector('.pictures').appendChild(fragment);
   };
 
@@ -77,7 +78,8 @@
     window.formValidation.displayXhrStatus('Данные загружены успешно');
     renderPhotoCards(xhrPhotos);
     sortingContainerNode.classList.remove('img-filters--inactive');
-    [].forEach.call(sortingButtons, function (button) {
+
+    [].forEach.call(sortingButtonsNodes, function (button) {
       button.addEventListener('click', onSortButtonClick);
     });
   };

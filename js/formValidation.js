@@ -7,9 +7,9 @@
   };
   var uploadFormNode = document.querySelector('.img-upload__form');
   var textHashtagsInputNode = uploadFormNode.querySelector('.text__hashtags');
-  var formSubmitBtn = uploadFormNode.querySelector('#upload-submit');
+  var formSubmitBtnNode = uploadFormNode.querySelector('#upload-submit');
 
-  formSubmitBtn.addEventListener('click', function () {
+  textHashtagsInputNode.addEventListener('blur', function () {
     var hashtagArray = textHashtagsInputNode.value.split(' ');
     var duplicatesCounter = 0;
     textHashtagsInputNode.setCustomValidity('');
@@ -58,8 +58,9 @@
 
     window.backend.postRequest(new FormData(uploadFormNode), function () {
       window.uploadOverlay.node.classList.add('hidden');
-      uploadFormNode.reset();
       displayXhrStatus('Форма отправлена успешно');
+      uploadFormNode.reset();
+      window.uploadOverlay.resetAllFormFilters();
     }, displayXhrStatus);
   });
 

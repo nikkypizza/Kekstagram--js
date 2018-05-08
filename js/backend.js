@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var XHR_TIMEOUT = 10000; // 10сек
+  var XHR_TIMEOUT = 10000; // 10 секунд
   var xhrRequestAddressMap = {
     GET: 'https://js.dump.academy/kekstagram/data',
     POST: 'https://js.dump.academy/kekstagram'
@@ -9,21 +9,21 @@
   // Если при отправке данных произошла ошибка запроса = показать блок. ТЗ 3.4
   var onPostRequestError = function () {
     var errorNode = document.querySelector('.img-upload__message--error');
-    var tryAgainLink = errorNode.firstElementChild.firstElementChild;
-    var uploadAgainLink = errorNode.firstElementChild.lastElementChild;
-    var imgUploadInput = document.querySelector('.img-upload__input');
+    var tryAgainLinkNode = errorNode.firstElementChild.firstElementChild;
+    var reuploadLinkNode = errorNode.firstElementChild.lastElementChild;
+    var imgUploadInputNode = document.querySelector('.img-upload__input');
     window.uploadOverlay.node.classList.add('hidden');
 
     window.uploadOverlay.resetAllFormFilters();
     errorNode.classList.remove('hidden');
-    tryAgainLink.addEventListener('click', function () {
+    tryAgainLinkNode.addEventListener('click', function () {
       errorNode.classList.add('hidden');
       window.formValidation.uploadFormNode.reset();
     });
-    uploadAgainLink.addEventListener('click', function () {
+    reuploadLinkNode.addEventListener('click', function () {
       errorNode.classList.add('hidden');
       window.formValidation.uploadFormNode.reset();
-      imgUploadInput.click();
+      imgUploadInputNode.click();
     });
   };
 
