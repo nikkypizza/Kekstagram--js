@@ -77,6 +77,7 @@
 
   window.uploadOverlay = {
     node: uploadOverlayNode,
+    keyCodeMap: keyCodeMap,
     onOverlayEscPress: onOverlayEscPress,
     resetAllFormFilters: resetAllFormFilters
   };

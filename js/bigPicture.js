@@ -40,28 +40,38 @@
     document.querySelector('.social__comment-loadmore').classList.add('visually-hidden');
     bigPictureNode.classList.remove('hidden');
   };
-  var onPictureMinClick = function (evt) {
-
-    if (evt.target.parentElement.className === 'picture__link') {
-      var target = evt.target;
-
-      window.gallery.allPhotosArr.forEach(function (el) {
-        if (target.getAttribute('src') === el.url) {
+  var onPictureMiniatureEvent = function (evt, isKeydownDown) {
+    window.gallery.allPhotosArr.forEach(function (el) {
+      if (isKeydownDown) {
+        if (evt.target.querySelector('img').getAttribute('src') === el.url) {
           showBigPictureWithData(el);
         }
-      });
-      document.addEventListener('keydown', window.uploadOverlay.onOverlayEscPress);
+      }
+      if (evt.target.getAttribute('src') === el.url) {
+        showBigPictureWithData(el);
+      }
+    });
+    document.addEventListener('keydown', window.uploadOverlay.onOverlayEscPress);
 
-      document.body.classList.add('modal-open'); // ТЗ 4.3
-      bigPictureCloseNode.addEventListener('click', function () {
-        document.body.classList.remove('modal-open');
-        bigPictureNode.classList.add('hidden');
-      });
-    }
+    document.body.classList.add('modal-open'); // ТЗ 4.3
+    bigPictureCloseNode.addEventListener('click', function () {
+      document.body.classList.remove('modal-open');
+      bigPictureNode.classList.add('hidden');
+    });
   };
 
   // Открывает большую картинку по клику на миниатюру, вешает обработчик закрытия
-  picturesListNode.addEventListener('click', onPictureMinClick);
+  picturesListNode.addEventListener('click', function (evt) {
+    if (evt.target.className === 'picture__img') {
+      onPictureMiniatureEvent(evt);
+    }
+  });
+  picturesListNode.addEventListener('keydown', function (evt) {
+    if (evt.target.className === 'picture__link' && evt.keyCode === window.uploadOverlay.keyCodeMap.KEY_ENTER) {
+      onPictureMiniatureEvent(evt, true);
+    }
+  });
+
 
   window.bigPicture = {
     node: bigPictureNode

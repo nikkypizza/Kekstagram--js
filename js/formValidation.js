@@ -18,7 +18,7 @@
     var duplicatesCounter = 0;
     textHashtagsInputNode.setCustomValidity('');
 
-    hashtagArray.forEach(function (currentItem, index) {
+    hashtagArray.forEach(function (currentItem, index, currentArray) {
       var badStringEnding = validationCriteriaMap.badEndsOfString.some(function (el) {
         return currentItem.endsWith(el);
       });
@@ -38,24 +38,24 @@
         textHashtagsInputNode.setCustomValidity('Длина хеш-тега не может превышать ' + validationCriteriaMap.MAX_STRING_LENGTH + ' символов');
       }
       // Удаляем дублирующиеся пробелы из массива
-      if (currentItem === '' && hashtagArray[index + 1] === '') {
-        hashtagArray.splice(index, 1);
+      if (currentItem === '' && currentArray[index + 1] === '') {
+        currentArray.splice(index, 1);
       }
-      if (hashtagArray[validationCriteriaMap.MAX_HASHTAGS_AMOUNT] === '') {
-        hashtagArray.splice(hashtagArray.indexOf(''), 1);// Хеш-тегов не может быть более 5
+      if (currentArray[validationCriteriaMap.MAX_HASHTAGS_AMOUNT] === '') {
+        currentArray.splice(currentArray.indexOf(''), 1);// Хеш-тегов не может быть более 5
       }
-      if (hashtagArray.length > validationCriteriaMap.MAX_HASHTAGS_AMOUNT) {
+      if (currentArray.length > validationCriteriaMap.MAX_HASHTAGS_AMOUNT) {
         textHashtagsInputNode.setCustomValidity('Хеш-тегов не может быть более' + validationCriteriaMap.MAX_HASHTAGS_AMOUNT);
       }
 
       // Переводим все элементы в верхний регистр и сравниваем исходный массив с самим собой. Если совпадений больше, чем длинна массива => в нем есть повторы === кидаем CustomValidity
-      hashtagArray.forEach(function (el) {
+      currentArray.forEach(function (el) {
         if (currentItem.toUpperCase() === el.toUpperCase()) {
           duplicatesCounter++;
         }
       });
 
-      if (duplicatesCounter > hashtagArray.length) {
+      if (duplicatesCounter > currentArray.length) {
         textHashtagsInputNode.setCustomValidity('Хеш-теги не должны повторяться');
       }
       if (currentItem === '#') {
