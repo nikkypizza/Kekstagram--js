@@ -5,53 +5,69 @@
     REMOVE_TIMEOUT: 3000, // 3 секунды
     OPACITY_REFRESH_RATE: 45
   };
+  var validationCriteriaMap = {
+    MAX_STRING_LENGTH: 20,
+    MAX_HASHTAGS_AMOUNT: 5,
+    badEndsOfString: ['#', ',', '.', '/']
+  };
   var uploadFormNode = document.querySelector('.img-upload__form');
   var textHashtagsInputNode = uploadFormNode.querySelector('.text__hashtags');
-  var formSubmitBtnNode = uploadFormNode.querySelector('#upload-submit');
 
-  textHashtagsInputNode.addEventListener('blur', function () {
+  var validateHashtags = function () {
     var hashtagArray = textHashtagsInputNode.value.split(' ');
     var duplicatesCounter = 0;
     textHashtagsInputNode.setCustomValidity('');
 
-    for (var i = 0; i < hashtagArray.length; i++) {
+    hashtagArray.forEach(function (currentItem, index) {
+      var badStringEnding = validationCriteriaMap.badEndsOfString.some(function (el) {
+        return currentItem.endsWith(el);
+      });
+
       // Если элементе массива '#' встречается больше 1 раза - кидаем CustomValidity
-      if (hashtagArray[i].split('#').length - 1 > 1) {
+      if (currentItem.split('#').length - 1 > 1) {
         textHashtagsInputNode.setCustomValidity('Хеш-теги должны разделяться пробелами');
       }
-      if (hashtagArray[i].slice(-1) === '#' || hashtagArray[i].slice(-1) === ',' || hashtagArray[i].slice(-1) === '.' || hashtagArray[i].slice(-1) === '/') {
+      if (badStringEnding) {
         textHashtagsInputNode.setCustomValidity('Хеш-тег не может оканчиваться на #, слэш, точку или запятую');
       }
       // Не начинается с '#' ?
-      if (hashtagArray[i] !== '' && hashtagArray[i].slice(0, 1) !== '#') {
+      if (currentItem !== '' && currentItem.slice(0, 1) !== '#') {
         textHashtagsInputNode.setCustomValidity('Хеш-тег должен начинаться со знака #');
       }
-      if (hashtagArray[i].length > 20) {
-        textHashtagsInputNode.setCustomValidity('Длина хеш-тега не может превышать 20 символов');
+      if (currentItem.length > validationCriteriaMap.MAX_STRING_LENGTH) {
+        textHashtagsInputNode.setCustomValidity('Длина хеш-тега не может превышать ' + validationCriteriaMap.MAX_STRING_LENGTH + ' символов');
       }
+      // Удаляем дублирующиеся пробелы из массива
+      if (currentItem === '' && hashtagArray[index + 1] === '') {
+        hashtagArray.splice(index, 1);
+      }
+      if (hashtagArray[validationCriteriaMap.MAX_HASHTAGS_AMOUNT] === '') {
+        hashtagArray.splice(hashtagArray.indexOf(''), 1);// Хеш-тегов не может быть более 5
+      }
+      if (hashtagArray.length > validationCriteriaMap.MAX_HASHTAGS_AMOUNT) {
+        textHashtagsInputNode.setCustomValidity('Хеш-тегов не может быть более' + validationCriteriaMap.MAX_HASHTAGS_AMOUNT);
+      }
+
       // Переводим все элементы в верхний регистр и сравниваем исходный массив с самим собой. Если совпадений больше, чем длинна массива => в нем есть повторы === кидаем CustomValidity
-      for (var j = 0; j < hashtagArray.length; j++) {
-        if (hashtagArray[i].toUpperCase() === hashtagArray[j].toUpperCase()) {
+      hashtagArray.forEach(function (el) {
+        if (currentItem.toUpperCase() === el.toUpperCase()) {
           duplicatesCounter++;
         }
-        if (duplicatesCounter > hashtagArray.length) {
-          textHashtagsInputNode.setCustomValidity('Хеш-теги не должны повторяться');
-        }
+      });
+
+      if (duplicatesCounter > hashtagArray.length) {
+        textHashtagsInputNode.setCustomValidity('Хеш-теги не должны повторяться');
       }
-      // Выносим пустоты из массива
-      while (hashtagArray[i] === '' || hashtagArray[i] === ' ') {
-        hashtagArray.splice(i, 1);
-      }
-      if (hashtagArray[i] === '#') {
+      if (currentItem === '#') {
         textHashtagsInputNode.setCustomValidity('Хеш-тег не может состоять из одного символа #');
       }
-    }
-    if (hashtagArray.length > 5) {
-      textHashtagsInputNode.setCustomValidity('Хеш-тегов не может быть более 5');
-    }
+    });
 
     textHashtagsInputNode.value = hashtagArray.join(' ');
-  });
+  };
+
+  // Вешает на инпут валидацию хештегов
+  textHashtagsInputNode.addEventListener('input', validateHashtags);
   // Отменяет действие формы по умолчанию и отправляет форму посредством XHR на сервер
   uploadFormNode.addEventListener('submit', function (evt) {
     evt.preventDefault();

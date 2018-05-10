@@ -2,7 +2,7 @@
 
 (function () {
   var IMG_DEFAULT_PREVIEW_SRC = 'img/upload-default-image.jpg';
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png', 'ico', 'svg', 'webp'];
   var keyCodeMap = {
     KEY_ESC: 27,
     KEY_ENTER: 13
