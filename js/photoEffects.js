@@ -65,12 +65,14 @@
   };
 
   var onFilterChange = function (scaleIsHidden, filterClassNameAdd) {
+    var currentPreviewNodeClassName = uploadPreviewImgNode.className;
+
     if (scaleIsHidden) {
       // Если шкала спрятана (выбран вариант без фильтра) === обнуляет фильтры превью и значение фильтра в форме
-      uploadPreviewImgNode.classList = '';
-      effectScaleNode.classList.add('hidden');
+      uploadPreviewImgNode.classList.remove(currentPreviewNodeClassName);
       uploadPreviewImgNode.style.filter = null;
       scaleValueInputNode.value = null;
+      effectScaleNode.classList.add('hidden');
     } else {
       effectScaleNode.classList.remove('hidden');
     }
@@ -85,6 +87,9 @@
 
   filtersListNode.addEventListener('click', function (evt) {
     switch (evt.target) {
+      case filterNoneNode:
+        onFilterChange(true);
+        break;
       case filterChromeNode:
         onFilterChange(false, filtersClassNameMap.chrome);
         break;
@@ -99,9 +104,6 @@
         break;
       case filterHeatNode:
         onFilterChange(false, filtersClassNameMap.heat);
-        break;
-      default:
-        onFilterChange(true);
         break;
     }
   });

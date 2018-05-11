@@ -10,9 +10,9 @@
 
   // Удаляет все текущие миниатюры перед отрисовкой отсортированных миниатюр
   var removeOldPhotos = function () {
-    var oldPhotos = picturesNode.querySelectorAll('.picture__link');
-    if (oldPhotos !== null) {
-      [].forEach.call(oldPhotos, function (el) {
+    var oldPhotosNodes = picturesNode.querySelectorAll('.picture__link');
+    if (oldPhotosNodes !== null) {
+      [].forEach.call(oldPhotosNodes, function (el) {
         picturesNode.removeChild(el);
       });
     }
@@ -25,11 +25,11 @@
     var fragment = document.createDocumentFragment();
 
     arr.forEach(function (el) {
-      var photoElement = photoTemplateNode.cloneNode(true);
-      photoElement.querySelector('.picture__img').src = el.url;
-      photoElement.querySelector('.picture__stat--comments').textContent = el.comments.length - 1;
-      photoElement.querySelector('.picture__stat--likes').textContent = el.likes;
-      fragment.appendChild(photoElement);
+      var photoCardCloneNode = photoTemplateNode.cloneNode(true);
+      photoCardCloneNode.querySelector('.picture__img').src = el.url;
+      photoCardCloneNode.querySelector('.picture__stat--comments').textContent = el.comments.length - 1;
+      photoCardCloneNode.querySelector('.picture__stat--likes').textContent = el.likes;
+      fragment.appendChild(photoCardCloneNode);
     });
     document.querySelector('.pictures').appendChild(fragment);
   };

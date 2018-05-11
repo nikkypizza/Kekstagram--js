@@ -2,7 +2,7 @@
 
 (function () {
   window.util = {
-    // Возвращает рандомное чило от min до max
+    // Возвращает случайное число от min до max
     getRandomNumber: function (min, max) {
       return Math.round(Math.random() * (max - min) + min);
     },

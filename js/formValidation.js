@@ -45,7 +45,7 @@
         currentArray.splice(currentArray.indexOf(''), 1);// Хеш-тегов не может быть более 5
       }
       if (currentArray.length > validationCriteriaMap.MAX_HASHTAGS_AMOUNT) {
-        textHashtagsInputNode.setCustomValidity('Хеш-тегов не может быть более' + validationCriteriaMap.MAX_HASHTAGS_AMOUNT);
+        textHashtagsInputNode.setCustomValidity('Хеш-тегов не может быть более ' + validationCriteriaMap.MAX_HASHTAGS_AMOUNT);
       }
 
       // Переводим все элементы в верхний регистр и сравниваем исходный массив с самим собой. Если совпадений больше, чем длинна массива => в нем есть повторы === кидаем CustomValidity
