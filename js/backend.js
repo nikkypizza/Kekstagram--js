@@ -3,8 +3,8 @@
 (function () {
   var XHR_TIMEOUT = 10000; // 10 секунд
   var xhrRequestAddressMap = {
-    GET: 'https://js.dump.academy/kekstagram/data',
-    POST: 'https://js.dump.academy/kekstagram'
+    GET: 'https://22.javascript.pages.academy/kekstagram/data',
+    POST: 'https://22.javascript.pages.academy/kekstagram'
   };
   // Если при отправке данных произошла ошибка запроса = показать блок. ТЗ 3.4
   var onPostRequestError = function () {

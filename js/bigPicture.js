@@ -7,7 +7,7 @@
   var picturesListNode = document.querySelector('.pictures');
 
   var showBigPictureWithData = function (arrElem) {
-    bigPictureNode.querySelector('.social__caption').textContent = arrElem.comments[0];
+    bigPictureNode.querySelector('.social__caption').textContent = arrElem.comments[0].message;
     bigPictureNode.querySelector('.big-picture__img img').src = arrElem.url;
     bigPictureNode.querySelector('.likes-count').textContent = arrElem.likes;
     bigPictureNode.querySelector('.comments-count').textContent = arrElem.comments.length;
@@ -17,11 +17,11 @@
     arrElem.comments.forEach(function (el) {
       var commentCloneNode = document.querySelector('.social__comment').cloneNode();
       var commentAvatarCloneNode = document.querySelector('.social__picture').cloneNode(true);
-      var newTextNode = document.createTextNode(el);
+      var newTextNode = document.createTextNode(el.message);
       // Первый коммент далее используется как шаблон. Удаляем его атрибут style со св-вом display='none'
       commentCloneNode.style = null;
 
-      commentAvatarCloneNode.src = 'img/avatar-' + window.util.getRandomNumber(1, 6) + '.svg';
+      commentAvatarCloneNode.src = el.avatar;
       commentCloneNode.appendChild(commentAvatarCloneNode);
       commentCloneNode.appendChild(newTextNode);
       fragment.appendChild(commentCloneNode);

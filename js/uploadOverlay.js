@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var DEFAULT_IMG_PREVIEW_SRC = 'img/upload-default-image.jpg';
+  var IMG_DEFAULT_PREVIEW_SRC = 'img/upload-default-image.jpg';
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png', 'ico', 'svg', 'webp'];
   var keyCodeMap = {
     KEY_ESC: 27,
@@ -29,17 +29,12 @@
   };
   // Обнуляет все изменения модального окна
   var resetAllFormFilters = function () {
-    var currentPreviewNodeClassName = window.photoEffects.uploadPreviewImgNode.className;
-
-    if (currentPreviewNodeClassName) {
-      window.photoEffects.uploadPreviewImgNode.classList.remove(currentPreviewNodeClassName);
-    }
     window.photoEffects.effectScaleNode.classList.add('hidden');
-    window.photoEffects.uploadPreviewImgNode.style.filter = '';
-    window.photoEffects.uploadPreviewImgNode.style.transform = '';
+    window.photoEffects.uploadPreviewImgNode.style = '';
+    window.photoEffects.uploadPreviewImgNode.classList = '';
     window.photoEffects.scaleValueInputNode.value = null;
     window.photoEffects.resizeValueInputNode.value = '100%';
-    replaceFiltersPreviewImageAddress(DEFAULT_IMG_PREVIEW_SRC); // Возвращает превью в значение по умолчанию
+    replaceFiltersPreviewImageAddress(IMG_DEFAULT_PREVIEW_SRC); // Возвращает превью в значение по умолчанию
   };
 
   var onOverlayOpen = function () {
